@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    image: service-user-admin
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_USER=root
+      - DB_PASS=
+      - DB_NAME=service_user_admin
+      - DB_PORT=3306
+      - INSTANCE_HOST=127.0.0.1
+      - PORT=8081
+  
