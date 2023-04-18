@@ -5,12 +5,12 @@
 
 
 - Admin req
-- [] ~GET Log service
-- [] GET Service status
+- [ ] ~GET Log service
+- [ ] GET Service status
 
 - [x] POST Register
-- [] POST Login
-- [] POST Check email
+- [ ] POST Login
+- [ ] POST Check email
 
 - Dashboard
 - [ ] GET User Profile
