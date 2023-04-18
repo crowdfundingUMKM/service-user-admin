@@ -8,7 +8,7 @@
 - [] ~GET Log service
 - [] GET Service status
 
-- [] POST Register
+- [x] POST Register
 - [] POST Login
 - [] POST Check email
 
