@@ -39,7 +39,7 @@ func main() {
 	api.POST("register_admin", userHandler.RegisterUser)
 
 	// end Rounting
-	port := fmt.Sprintf(":%s", os.Getenv("PORT"))
-	router.Run(port)
+	url := fmt.Sprintf("%s:%s", os.Getenv("SERVICE_HOST"), os.Getenv("SERVICE_PORT"))
+	router.Run(url)
 
 }
