@@ -8,6 +8,7 @@ import (
 	"service-user-admin/auth"
 	"service-user-admin/database"
 	"service-user-admin/handler"
+	L "service-user-admin/log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -18,6 +19,9 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	// setup log
+	L.InitLog()
 
 	// setup repository
 	db := database.NewConnectionDB()
@@ -37,6 +41,7 @@ func main() {
 	api := router.Group("api/v1")
 
 	// Rounting admin-health
+	api.GET("/admin/log_service/:id", userHandler.GetLogtoAdmin)
 
 	// Rounting admin
 	api.POST("register_admin", userHandler.RegisterUser)

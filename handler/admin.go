@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"io/ioutil"
 	"net/http"
+	"os"
 	"service-user-admin/admin"
 	"service-user-admin/auth"
 	"service-user-admin/helper"
@@ -16,6 +18,24 @@ type userAdminHandler struct {
 
 func NewUserHandler(userService admin.Service, authService auth.Service) *userAdminHandler {
 	return &userAdminHandler{userService, authService}
+}
+
+func (h *userAdminHandler) GetLogtoAdmin(c *gin.Context) {
+	// check id admin
+	id := os.Getenv("ADMIN_ID")
+	if c.Param("id") == id {
+		content, err := ioutil.ReadFile("./log/gin.log")
+		if err != nil {
+			response := helper.APIResponse("Failed to get log", http.StatusBadRequest, "error", nil)
+			c.JSON(http.StatusBadRequest, response)
+			return
+		}
+		c.String(http.StatusOK, string(content))
+	} else {
+		response := helper.APIResponse("Your not Admin, cannot Access", http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusNotFound, response)
+		return
+	}
 }
 
 func (h *userAdminHandler) RegisterUser(c *gin.Context) {
