@@ -5,7 +5,7 @@
 
 
 - Admin req
-- [ ] ~GET Log service
+- [x] ~GET Log service
 - [ ] GET Service status
 
 - [x] POST Register
