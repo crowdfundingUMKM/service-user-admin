@@ -19,6 +19,9 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	// setup log
+	// L.InitLog()
+
 	// setup repository
 	db := database.NewConnectionDB()
 	userAdminRepository := admin.NewRepository(db)
@@ -36,10 +39,14 @@ func main() {
 	router := gin.Default()
 	api := router.Group("api/v1")
 
+	// Rounting admin-health
+	// api.GET("/admin/log_service/:id", userHandler.GetLogtoAdmin)
+
+	// Rounting admin
 	api.POST("register_admin", userHandler.RegisterUser)
 
 	// end Rounting
-	port := fmt.Sprintf(":%s", os.Getenv("PORT"))
-	router.Run(port)
+	url := fmt.Sprintf("%s:%s", os.Getenv("SERVICE_HOST"), os.Getenv("SERVICE_PORT"))
+	router.Run(url)
 
 }
