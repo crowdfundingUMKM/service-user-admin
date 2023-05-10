@@ -36,6 +36,9 @@ func main() {
 	router := gin.Default()
 	api := router.Group("api/v1")
 
+	// Rounting admin-health
+
+	// Rounting admin
 	api.POST("register_admin", userHandler.RegisterUser)
 
 	// end Rounting
