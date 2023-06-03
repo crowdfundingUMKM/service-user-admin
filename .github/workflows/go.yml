@@ -55,7 +55,7 @@ jobs:
           
           - name: Build Docker image
             run: |
-                docker build --env-file .env -t ${{github.repository}}:latest .
+                docker build --env-file .env -t service-user-admin:latest .
               
           - name: Push Docker image
             run: |
