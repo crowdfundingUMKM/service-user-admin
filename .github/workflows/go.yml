@@ -73,9 +73,8 @@ jobs:
           #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/service-user-admin:latest
           #     file: ./app/Dockerfile
           - name: Build Docker image
-            
             run: |
-              docker build --env-file .env -t service-user-investor:latest .
+              env $(cat .env | xargs) docker build -t service-user-investor:latest .
               
           - name: Push Docker image
             run: |
