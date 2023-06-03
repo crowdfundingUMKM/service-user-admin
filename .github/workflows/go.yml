@@ -44,34 +44,7 @@ jobs:
           - name: Create .env file
             run: |
               echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
-          
-    
-          # - name: Build and Push Docker image
-          #   uses: docker/build-push-action@v2
-          #   with:
-          #     context: .
-          #     push: true
-          #     tags: ${{secrets.DOCKERHUB_USERNAME}}/${{github.repository}}:latest
-          #     file: ./Dockerfile
-          
-          # - name: Build Docker image
-          #   uses: docker/build-push-action@v2
-          #   with:
-          #     context: .
-          #     push: false
-          #     tags: ${{secrets.DOCKERHUB_USERNAME}}/service-user-admin:latest
-          #     file: ./Dockerfile
-          # - name: Copy .env to Dockerfile directory
-          #   run: |
-          #     cp .env ./app
-      
-          # - name: Build Docker image
-          #   uses: docker/build-push-action@v2
-          #   with:
-          #     context: .
-          #     push: false
-          #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/service-user-admin:latest
-          #     file: ./app/Dockerfile
+
           - name: Build Docker image
             run: |
               env $(cat .env | xargs) docker build -t service-user-admin:latest .
