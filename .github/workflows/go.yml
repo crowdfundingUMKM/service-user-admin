@@ -1,0 +1,86 @@
+name: Go
+
+on:
+  push:
+    branches: [ci/cd]
+
+jobs:
+      build_on_dockerhub:
+        runs-on: ubuntu-latest
+        steps:
+          - name: send message
+            uses: appleboy/discord-action@master
+            with:
+              webhook_id: ${{ secrets.WEBHOOK_ID }}
+              webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
+              color: "#9e6a03"
+              username: "GitHub Bot Service user Admin"
+              # name commit and branch
+              message: "Running GitHub Action for Go ${{ github.event_name }} on Service user Admin"
+    
+          - uses: actions/checkout@v2
+    
+          - name: Checkout code
+            uses: actions/checkout@v2
+  
+          - name: Build and test
+            uses: docker://golang:1.19-alpine
+            with:
+              working-directory: /go/src/github.com/${{ github.repository }}
+              run: |
+                go mod download
+                go mod install
+                go get -v -t -d ./...
+                go build
+                go test ./...
+          
+
+          - name: Login to DockerHub
+            uses: docker/login-action@v1
+            with:
+              username: ${{ secrets.DOCKERHUB_USERNAME }}
+              password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+          - name: Create .env file
+            run: |
+              echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+
+          - name: Build Docker image
+            run: |
+              env $(cat .env | xargs) docker build -t service-user-admin:latest .
+              
+          - name: Push Docker image
+            run: |
+                docker tag service-user-admin:latest ${{secrets.DOCKERHUB_USERNAME}}/service-user-admin:latest
+                docker push ${{secrets.DOCKERHUB_USERNAME}}/service-user-admin:latest
+          
+
+
+    
+          - name: send message
+            if: success()
+            uses: appleboy/discord-action@master
+            with:
+              webhook_id: ${{ secrets.WEBHOOK_ID }}
+              webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
+              color: "#48f442"
+              username: "GitHub Bot Service user Admin" 
+              message: "Succsess running action for Go ${{ github.event_name }} on Service user Admin "
+    
+          # notify red color if error discord action
+          - name: send message
+            if: failure()
+            uses: appleboy/discord-action@master
+            with:
+              webhook_id: ${{ secrets.WEBHOOK_ID }}
+              webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
+              color: "#f44242"
+              username: "GitHub Bot Service user Admin"
+              message: "Failed running action for Go ${{ github.event_name }} on Service user Admin "
+
+    
+         
+             
+                
+              
+

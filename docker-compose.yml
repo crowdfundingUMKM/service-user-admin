@@ -3,6 +3,7 @@ version: '3.8'
 services:
   app:
     image: service-user-admin
+    container_name: service-user-admin
     build:
       context: .
       dockerfile: Dockerfile

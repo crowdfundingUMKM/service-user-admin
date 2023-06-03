@@ -5,7 +5,7 @@
 
 
 - Admin req
-- [ ] ~GET Log service
+- [x] ~GET Log service
 - [ ] GET Service status
 
 - [x] POST Register
@@ -18,4 +18,12 @@
 - [ ] PUT Update User profile
 
 - [ ] POST Logout
+
+
+### CI/CD Github Actions
+
+- [x] ~CI/CD Github Actions
+- [] Push to Docker Hub
+- [] Push to GCP registry
+
 
