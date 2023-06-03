@@ -33,7 +33,8 @@ jobs:
                 go get -v -t -d ./...
                 go build
                 go test ./...
-    
+          
+
           - name: Login to DockerHub
             uses: docker/login-action@v1
             with:
@@ -60,18 +61,21 @@ jobs:
           #     push: false
           #     tags: ${{secrets.DOCKERHUB_USERNAME}}/service-user-admin:latest
           #     file: ./Dockerfile
-          - name: Copy .env to Dockerfile directory
-            run: |
-              cp .env ./app
+          # - name: Copy .env to Dockerfile directory
+          #   run: |
+          #     cp .env ./app
       
+          # - name: Build Docker image
+          #   uses: docker/build-push-action@v2
+          #   with:
+          #     context: .
+          #     push: false
+          #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/service-user-admin:latest
+          #     file: ./app/Dockerfile
           - name: Build Docker image
-            uses: docker/build-push-action@v2
-            with:
-              context: .
-              push: false
-              tags: ${{ secrets.DOCKERHUB_USERNAME }}/service-user-admin:latest
-              file: ./app/Dockerfile
-              
+            
+            run: |
+              docker build --env-file .env -t service-user-investor:latest .
               
           - name: Push Docker image
             run: |
