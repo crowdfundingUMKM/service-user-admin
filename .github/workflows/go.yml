@@ -5,7 +5,7 @@ on:
     branches: [ci/cd]
 
 jobs:
-      build:
+      build_on_dockerhub:
         runs-on: ubuntu-latest
         steps:
           - name: send message
@@ -59,7 +59,7 @@ jobs:
               
           - name: Push Docker image
             run: |
-                docker tag ${{github.repository}}:latest ${{secrets.DOCKERHUB_USERNAME}}/${{github.repository}}:latest
+                docker tag ${{secrets.DOCKERHUB_USERNAME}}:latest ${{secrets.DOCKERHUB_USERNAME}}/${{github.repository}}:latest
                 docker push ${{secrets.DOCKERHUB_USERNAME}}/${{github.repository}}:latest
           
 
