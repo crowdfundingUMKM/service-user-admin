@@ -59,7 +59,7 @@ jobs:
               
           - name: Push Docker image
             run: |
-                docker tag ${{secrets.DOCKERHUB_USERNAME}}:latest ${{secrets.DOCKERHUB_USERNAME}}/service-user-admin:latest
+                docker tag service-user-admin:latest ${{secrets.DOCKERHUB_USERNAME}}/service-user-admin:latest
                 docker push ${{secrets.DOCKERHUB_USERNAME}}/service-user-admin:latest
           
 
