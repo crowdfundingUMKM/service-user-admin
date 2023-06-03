@@ -19,3 +19,11 @@
 
 - [ ] POST Logout
 
+
+### CI/CD Github Actions
+
+- [x] ~CI/CD Github Actions
+- [] Push to Docker Hub
+- [] Push to GCP registry
+
+
