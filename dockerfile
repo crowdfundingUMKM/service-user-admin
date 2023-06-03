@@ -4,15 +4,15 @@ FROM golang:1.19-alpine
 
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
+# COPY go.mod ./
+# COPY go.sum ./
+COPY . /app
 
 RUN go mod download
+RUN go mod tidy
 
-COPY *.go ./
+RUN go build -o main
 
-RUN go build -o /service-admin
+EXPOSE 8081
 
-EXPOSE 8080
-
-CMD [ "/service-admin" ]
+CMD [ "./main" ]

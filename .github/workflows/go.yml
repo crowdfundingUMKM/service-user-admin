@@ -74,7 +74,7 @@ jobs:
           #     file: ./app/Dockerfile
           - name: Build Docker image
             run: |
-              env $(cat .env | xargs) docker build -t service-user-investor:latest .
+              env $(cat .env | xargs) docker build -t service-user-admin:latest .
               
           - name: Push Docker image
             run: |
