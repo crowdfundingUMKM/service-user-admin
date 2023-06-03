@@ -26,7 +26,7 @@ jobs:
           - name: Build and test
             uses: docker://golang:1.19-alpine
             with:
-              working-directory: /go/src/github.com/ahhzaky/service-user-admin
+              working-directory: /go/src/github.com/${{ github.repository }}
               run: |
                 go mod download
                 go mod install
