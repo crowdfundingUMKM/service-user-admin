@@ -60,9 +60,9 @@ jobs:
           #     push: false
           #     tags: ${{secrets.DOCKERHUB_USERNAME}}/service-user-admin:latest
           #     file: ./Dockerfile
-          # - name: Copy .env to Dockerfile directory
-          #   run: |
-          #     cp .env ./app/.env
+          - name: Copy .env to Dockerfile directory
+            run: |
+              cp .env ./Dockerfile
       
           - name: Build Docker image
             uses: docker/build-push-action@v2
@@ -70,6 +70,8 @@ jobs:
               context: .
               push: false
               tags: ${{ secrets.DOCKERHUB_USERNAME }}/service-user-admin:latest
+              file: ./Dockerfile
+              
               
               
           - name: Push Docker image
