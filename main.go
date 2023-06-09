@@ -43,7 +43,7 @@ func main() {
 	// api.GET("/admin/log_service/:id", userHandler.GetLogtoAdmin)
 
 	// Rounting admin
-	api.POST("register_admin", userHandler.RegisterUser)
+	api.POST("/register_admin", userHandler.RegisterUser)
 
 	// end Rounting
 	url := fmt.Sprintf("%s:%s", os.Getenv("SERVICE_HOST"), os.Getenv("SERVICE_PORT"))
