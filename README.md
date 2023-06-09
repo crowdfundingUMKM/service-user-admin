@@ -7,7 +7,6 @@
 - Admin req
 - [x] ~GET Log service
 - [x] GET Service status
-
 - [x] POST Register
     - [x] POST Check email
     - [x] POST Check phone
