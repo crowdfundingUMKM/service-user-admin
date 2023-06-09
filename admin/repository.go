@@ -5,6 +5,10 @@ import "gorm.io/gorm"
 // KONTRAK
 type Repository interface {
 	Save(user User) (User, error)
+	FindByUnixID(unix_id string) (User, error)
+	FindByEmail(email string) (User, error)
+	UpdateToken(user User) (User, error)
+	FindByPhone(phone string) (User, error)
 }
 
 type repository struct {
@@ -21,4 +25,51 @@ func (r *repository) Save(user User) (User, error) {
 		return user, err
 	}
 	return user, nil
+}
+
+func (r *repository) FindByUnixID(unix_id string) (User, error) {
+	var user User
+
+	err := r.db.Where("unix_id = ?", unix_id).Find(&user).Error
+
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+
+}
+
+// UpdateToken
+func (r *repository) UpdateToken(user User) (User, error) {
+	err := r.db.Model(&user).Update("token", user.Token).Error
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (r *repository) FindByEmail(email string) (User, error) {
+	var user User
+
+	err := r.db.Where("email = ?", email).Find(&user).Error
+
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+
+}
+
+func (r *repository) FindByPhone(phone string) (User, error) {
+	var user User
+
+	err := r.db.Where("phone = ?", phone).Find(&user).Error
+
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+
 }
