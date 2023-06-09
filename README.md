@@ -9,10 +9,9 @@
 - [ ] GET Service status
 
 - [x] POST Register
-    - [x] Check email
-    - [x] Check phone
+    - [x] POST Check email
+    - [x] POST Check phone
 - [x] POST Login
-- [ ] POST Check email
 
 - Dashboard
 - [ ] GET User Profile
