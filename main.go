@@ -41,6 +41,7 @@ func main() {
 
 	// Rounting admin-health
 	// api.GET("/log_service_admin/:id", userHandler.GetLogtoAdmin)
+	api.GET("/service_status/:id", userHandler.ServiceHealth)
 
 	// Rounting admin
 	api.POST("/email_check", userHandler.CheckEmailAvailability)
