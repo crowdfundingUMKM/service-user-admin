@@ -19,3 +19,13 @@ type CheckEmailInput struct {
 type CheckPhoneInput struct {
 	Phone string `json:"phone" binding:"required"`
 }
+type GetUserDetailInput struct {
+	UnixID string `uri:"unix_id" binding:"required"`
+}
+
+// update data does not require full contents
+type UpdateUserInput struct {
+	Name  string `json:"name"`
+	Phone string `json:"phone"`
+	Email string `json:"email"`
+}

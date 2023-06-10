@@ -8,6 +8,7 @@ import (
 	"service-user-admin/auth"
 	"service-user-admin/database"
 	"service-user-admin/handler"
+	"service-user-admin/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -48,6 +49,9 @@ func main() {
 	api.POST("/phone_check", userHandler.CheckPhoneAvailability)
 	api.POST("/register_admin", userHandler.RegisterUser)
 	api.POST("/login_admin", userHandler.Login)
+
+	// with middleware middleware.authMiddleware(authService, userAdminService),
+	api.PUT("/update_admin/:unix_id", middleware.AuthMiddleware(authService, userAdminService), userHandler.UpdateUser)
 
 	// end Rounting
 	url := fmt.Sprintf("%s:%s", os.Getenv("SERVICE_HOST"), os.Getenv("SERVICE_PORT"))

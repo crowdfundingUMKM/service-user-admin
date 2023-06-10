@@ -5,6 +5,9 @@
 
 
 - Admin req
+
+- [ ]CORS CONFIG
+
 - [x] ~GET Log service
 - [x] GET Service status
 - [x] POST Register
@@ -12,7 +15,10 @@
     - [x] POST Check phone
 - [x] POST Login
 
-- Dashboard
+- Dashboard (Middleware Auth)
+- [x] POST Update User profile
+    - Update data can be empty content
+    - update with name, email, phone
 - [ ] GET User Profile
 - [ ] POST Update_avatar
 - [ ] PUT Update User profile

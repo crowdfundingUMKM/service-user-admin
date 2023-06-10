@@ -9,6 +9,9 @@ type Repository interface {
 	FindByEmail(email string) (User, error)
 	UpdateToken(user User) (User, error)
 	FindByPhone(phone string) (User, error)
+
+	// update user
+	Update(user User) (User, error)
 }
 
 type repository struct {
@@ -72,4 +75,14 @@ func (r *repository) FindByPhone(phone string) (User, error) {
 	}
 	return user, nil
 
+}
+
+func (r *repository) Update(user User) (User, error) {
+	err := r.db.Model(&user).Updates(User{Name: user.Name, Phone: user.Phone, Email: user.Email}).Error
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
 }
