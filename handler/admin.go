@@ -292,7 +292,7 @@ func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 		errors := helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors": errors}
 
-		response := helper.APIResponse("Update user failed because uri error", http.StatusUnprocessableEntity, "error", errorMessage)
+		response := helper.APIResponse("Update user failed, input data failure", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
