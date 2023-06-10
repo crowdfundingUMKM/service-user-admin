@@ -19,7 +19,8 @@
 - [x] PUT Update User profile admin
     - Update data can be empty content
     - update with name, email, phone
-- [ ] GET User Profile
+- [x] GET User Profile
+
 - [ ] POST Update_avatar
 
 

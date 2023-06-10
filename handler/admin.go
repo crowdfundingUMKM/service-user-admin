@@ -281,6 +281,24 @@ func (h *userAdminHandler) CheckPhoneAvailability(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// get user by middleware
+func (h *userAdminHandler) GetUser(c *gin.Context) {
+	currentUser := c.MustGet("currentUser").(admin.User)
+
+	// check f account deactive
+	if currentUser.StatusAccount == "deactive" {
+		errorMessage := gin.H{"errors": "Your account is deactive by admin"}
+		response := helper.APIResponse("Get user failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	formatter := admin.FormatterUser(currentUser, "")
+
+	response := helper.APIResponse("Successfuly get user by middleware", http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+}
+
 // update user by unix id
 func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 	var inputID admin.GetUserDetailInput

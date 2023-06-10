@@ -64,7 +64,8 @@ func main() {
 	api.POST("/register_admin", userHandler.RegisterUser)
 	api.POST("/login_admin", userHandler.Login)
 
-	// with middleware middleware.authMiddleware(authService, userAdminService),
+	// get user by unix_id
+	api.GET("/get_user", middleware.AuthMiddleware(authService, userAdminService), userHandler.GetUser)
 	api.PUT("/update_admin/:unix_id", middleware.AuthMiddleware(authService, userAdminService), userHandler.UpdateUser)
 
 	api.POST("/logout_admin", middleware.AuthMiddleware(authService, userAdminService), userHandler.Logout)
