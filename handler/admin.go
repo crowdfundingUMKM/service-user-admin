@@ -334,7 +334,7 @@ func (h *userAdminHandler) Logout(c *gin.Context) {
 
 	// check if token is empty
 	if currentUser.Token == "" {
-		response := helper.APIResponse("Logout failed, your logout right now", http.StatusBadRequest, "error", nil)
+		response := helper.APIResponse("Logout failed, your logout right now", http.StatusForbidden, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}

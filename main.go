@@ -9,7 +9,9 @@ import (
 	"service-user-admin/database"
 	"service-user-admin/handler"
 	"service-user-admin/middleware"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -19,9 +21,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
-	// setup cors
-
 	// setup log
 	// L.InitLog()
 
@@ -40,6 +39,19 @@ func main() {
 
 	// RUN SERVICE
 	router := gin.Default()
+	// config cors
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"*"}
+	config.AllowMethods = []string{"GET", "POST", "PUT"}
+	config.AllowHeaders = []string{"Origin", "Authorization", "Content-Type"}
+	config.ExposeHeaders = []string{"Content-Length"}
+	config.AllowWildcard = true
+	// hasil permintaan CORS akan disimpan di cache browser selama 12 jam sebelum browser melakukan permintaan baru ke server.
+	config.MaxAge = 12 * time.Hour
+	config.AllowFiles = true
+	router.Use(cors.New(config))
+
+	// group api
 	api := router.Group("api/v1")
 
 	// Rounting admin-health Root Admin
