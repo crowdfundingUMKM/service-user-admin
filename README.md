@@ -16,12 +16,12 @@
 - [x] POST Login
 
 - Dashboard (Middleware Auth)
-- [x] POST Update User profile
+- [x] PUT Update User profile admin
     - Update data can be empty content
     - update with name, email, phone
 - [ ] GET User Profile
 - [ ] POST Update_avatar
-- [ ] PUT Update User profile
+
 
 - [x] POST Logout
     - Delete token 
