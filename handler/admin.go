@@ -326,3 +326,28 @@ func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 	return
 }
+
+// Logout user
+func (h *userAdminHandler) Logout(c *gin.Context) {
+	// get data from middleware
+	currentUser := c.MustGet("currentUser").(admin.User)
+
+	// check if token is empty
+	if currentUser.Token == "" {
+		response := helper.APIResponse("Logout failed, your logout right now", http.StatusForbidden, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	// delete token in database
+	_, err := h.userService.DeleteToken(currentUser.UnixID)
+	if err != nil {
+		response := helper.APIResponse("Logout failed", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Logout success", http.StatusOK, "success", nil)
+	c.JSON(http.StatusOK, response)
+	return
+}
