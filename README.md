@@ -23,7 +23,8 @@
 - [ ] POST Update_avatar
 - [ ] PUT Update User profile
 
-- [ ] POST Logout
+- [x] POST Logout
+    - Delete token 
 
 
 ### CI/CD Github Actions

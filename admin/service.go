@@ -18,6 +18,8 @@ type Service interface {
 
 	UpdateUserByUnixID(UnixID string, input UpdateUserInput) (User, error)
 	SaveToken(UnixID string, Token string) (User, error)
+
+	DeleteToken(UnixID string) (User, error)
 }
 
 type service struct {
@@ -144,6 +146,27 @@ func (s *service) UpdateUserByUnixID(UnixID string, input UpdateUserInput) (User
 	user.Phone = input.Phone
 
 	updatedUser, err := s.repository.Update(user)
+	if err != nil {
+		return updatedUser, err
+	}
+
+	return updatedUser, nil
+}
+
+// logout
+func (s *service) DeleteToken(UnixID string) (User, error) {
+	user, err := s.repository.FindByUnixID(UnixID)
+	if err != nil {
+		return user, err
+	}
+
+	if user.UnixID == "" {
+		return user, errors.New("No user found on with that ID")
+	}
+
+	user.Token = ""
+
+	updatedUser, err := s.repository.UpdateToken(user)
 	if err != nil {
 		return updatedUser, err
 	}

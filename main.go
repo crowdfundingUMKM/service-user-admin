@@ -53,6 +53,8 @@ func main() {
 	// with middleware middleware.authMiddleware(authService, userAdminService),
 	api.PUT("/update_admin/:unix_id", middleware.AuthMiddleware(authService, userAdminService), userHandler.UpdateUser)
 
+	api.POST("/logout_admin", middleware.AuthMiddleware(authService, userAdminService), userHandler.Logout)
+
 	// end Rounting
 	url := fmt.Sprintf("%s:%s", os.Getenv("SERVICE_HOST"), os.Getenv("SERVICE_PORT"))
 	router.Run(url)
