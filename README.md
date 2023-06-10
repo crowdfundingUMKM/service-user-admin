@@ -20,6 +20,7 @@
     - Update data can be empty content
     - update with name, email, phone
 - [x] GET User Profile
+    - with middleware on token
 
 - [ ] POST Update_avatar
 
