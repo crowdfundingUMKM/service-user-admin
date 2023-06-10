@@ -312,7 +312,7 @@ func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	formatter := admin.FormatterUserDetail(updatedUser)
+	formatter := admin.FormatterUserDetail(currentUser, updatedUser)
 
 	response := helper.APIResponse("User has been updated", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)

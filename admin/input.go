@@ -23,8 +23,9 @@ type GetUserDetailInput struct {
 	UnixID string `uri:"unix_id" binding:"required"`
 }
 
+// update data does not require full contents
 type UpdateUserInput struct {
-	Name  string `json:"name" binding:"required"`
-	Phone string `json:"phone" binding:"required"`
-	Email string `json:"email" binding:"required,email"`
+	Name  string `json:"name"`
+	Phone string `json:"phone"`
+	Email string `json:"email"`
 }

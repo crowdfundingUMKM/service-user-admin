@@ -32,7 +32,7 @@ type UserDetailFormatter struct {
 	StatusAccount string `json:"status_account"`
 }
 
-func FormatterUserDetail(user User) UserDetailFormatter {
+func FormatterUserDetail(user User, updatedUser User) UserDetailFormatter {
 	formatter := UserDetailFormatter{
 		ID:            user.ID,
 		UnixID:        user.UnixID,
@@ -40,6 +40,19 @@ func FormatterUserDetail(user User) UserDetailFormatter {
 		Phone:         user.Phone,
 		Email:         user.Email,
 		StatusAccount: user.StatusAccount,
+	}
+	// read data before update if null use old data
+	if updatedUser.Name != "" {
+		formatter.Name = updatedUser.Name
+	}
+	if updatedUser.Phone != "" {
+		formatter.Phone = updatedUser.Phone
+	}
+	if updatedUser.Email != "" {
+		formatter.Email = updatedUser.Email
+	}
+	if updatedUser.StatusAccount != "" {
+		formatter.StatusAccount = updatedUser.StatusAccount
 	}
 	return formatter
 }
