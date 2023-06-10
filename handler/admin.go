@@ -132,6 +132,14 @@ func (h *userAdminHandler) RegisterUser(c *gin.Context) {
 	formatter := admin.FormatterUser(newUser, token)
 
 	if formatter.StatusAccount == "active" {
+		_, err = h.userService.SaveToken(newUser.UnixID, token)
+
+		if err != nil {
+			response := helper.APIResponse("Register account failed", http.StatusBadRequest, "error", nil)
+			c.JSON(http.StatusBadRequest, response)
+			return
+		}
+
 		response := helper.APIResponse("Account has been registered and active", http.StatusOK, "success", formatter)
 		c.JSON(http.StatusOK, response)
 		return
