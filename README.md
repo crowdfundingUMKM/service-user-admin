@@ -15,7 +15,8 @@
     - [x] POST Check phone
 - [x] POST Login
 
-- Dashboard
+- Dashboard (Middleware Auth)
+- [x] POST Update User profile
 - [ ] GET User Profile
 - [ ] POST Update_avatar
 - [ ] PUT Update User profile
