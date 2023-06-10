@@ -17,6 +17,8 @@
 
 - Dashboard (Middleware Auth)
 - [x] POST Update User profile
+    - Update data can be empty content
+    - update with name, email, phone
 - [ ] GET User Profile
 - [ ] POST Update_avatar
 - [ ] PUT Update User profile
