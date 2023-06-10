@@ -332,6 +332,13 @@ func (h *userAdminHandler) Logout(c *gin.Context) {
 	// get data from middleware
 	currentUser := c.MustGet("currentUser").(admin.User)
 
+	// check if token is empty
+	if currentUser.Token == "" {
+		response := helper.APIResponse("Logout failed, your logout right now", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
 	// delete token in database
 	_, err := h.userService.DeleteToken(currentUser.UnixID)
 	if err != nil {

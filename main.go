@@ -20,6 +20,8 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	// setup cors
+
 	// setup log
 	// L.InitLog()
 
@@ -40,7 +42,7 @@ func main() {
 	router := gin.Default()
 	api := router.Group("api/v1")
 
-	// Rounting admin-health
+	// Rounting admin-health Root Admin
 	// api.GET("/log_service_admin/:id", userHandler.GetLogtoAdmin)
 	api.GET("/service_status/:id", userHandler.ServiceHealth)
 
