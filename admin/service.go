@@ -14,6 +14,9 @@ type Service interface {
 	IsEmailAvailable(input CheckEmailInput) (bool, error)
 	IsPhoneAvailable(input CheckPhoneInput) (bool, error)
 
+	GetUserByUnixID(UnixID string) (User, error)
+
+	UpdateUserByUnixID(UnixID string, input UpdateUserInput) (User, error)
 	SaveToken(UnixID string, Token string) (User, error)
 }
 
@@ -111,4 +114,39 @@ func (s *service) IsPhoneAvailable(input CheckPhoneInput) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func (s *service) GetUserByUnixID(UnixID string) (User, error) {
+	user, err := s.repository.FindByUnixID(UnixID)
+	if err != nil {
+		return user, err
+	}
+
+	if user.UnixID == "" {
+		return user, errors.New("No user found on with that ID")
+	}
+
+	return user, nil
+}
+
+func (s *service) UpdateUserByUnixID(UnixID string, input UpdateUserInput) (User, error) {
+	user, err := s.repository.FindByUnixID(UnixID)
+	if err != nil {
+		return user, err
+	}
+
+	if user.UnixID == "" {
+		return user, errors.New("No user found on with that ID")
+	}
+
+	user.Name = input.Name
+	user.Email = input.Email
+	user.Phone = input.Phone
+
+	updatedUser, err := s.repository.Update(user)
+	if err != nil {
+		return updatedUser, err
+	}
+
+	return updatedUser, nil
 }

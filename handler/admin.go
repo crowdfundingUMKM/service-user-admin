@@ -272,3 +272,49 @@ func (h *userAdminHandler) CheckPhoneAvailability(c *gin.Context) {
 	response := helper.APIResponse(metaMessage, http.StatusOK, "success", data)
 	c.JSON(http.StatusOK, response)
 }
+
+// update user by unix id
+func (h *userAdminHandler) UpdateUser(c *gin.Context) {
+	var inputID admin.GetUserDetailInput
+
+	// check id is valid or not
+	err := c.ShouldBindUri(&inputID)
+	if err != nil {
+		response := helper.APIResponse("Update user failed", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	var inputData admin.UpdateUserInput
+
+	err = c.ShouldBindJSON(&inputData)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Update user failed because uri error", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(admin.User)
+
+	if currentUser.UnixID != inputID.UnixID {
+		response := helper.APIResponse("Update user failed, because you are not auth", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	updatedUser, err := h.userService.UpdateUserByUnixID(currentUser.UnixID, inputData)
+	if err != nil {
+		response := helper.APIResponse("Update user failed", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	formatter := admin.FormatterUserDetail(updatedUser)
+
+	response := helper.APIResponse("User has been updated", http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+	return
+}
