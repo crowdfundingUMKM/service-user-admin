@@ -5,6 +5,9 @@
 
 
 - Admin req
+
+- [ ]CORS CONFIG
+
 - [x] ~GET Log service
 - [x] GET Service status
 - [x] POST Register
