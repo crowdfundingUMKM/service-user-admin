@@ -13,6 +13,11 @@
 
 - [x]CORS CONFIG
 
+- [ ] POST deactive admin
+    - [ ] with midlleware auth admin
+- [ ] POST active admin
+    - [ ] with midlleware auth admin
+
 - [x] ~GET Log service
     - Auth middleware admin, Uri(unix_id on env), 
 - [x] GET Service status
