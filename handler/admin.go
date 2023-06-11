@@ -49,7 +49,7 @@ func (h *userAdminHandler) GetLogtoAdmin(c *gin.Context) {
 	}
 }
 
-// for admin get env
+// Get status service
 func (h *userAdminHandler) ServiceHealth(c *gin.Context) {
 	// check env open or not
 	errEnv := godotenv.Load()
@@ -99,6 +99,7 @@ func (h *userAdminHandler) ServiceHealth(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// Register User Admin
 func (h *userAdminHandler) RegisterUser(c *gin.Context) {
 	// tangkap input dari user
 	// map input dari user ke struct RegisterUserInput
@@ -157,6 +158,7 @@ func (h *userAdminHandler) RegisterUser(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// Login User Admin
 func (h *userAdminHandler) Login(c *gin.Context) {
 
 	var input admin.LoginInput
@@ -213,6 +215,7 @@ func (h *userAdminHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// Check Email Availability
 func (h *userAdminHandler) CheckEmailAvailability(c *gin.Context) {
 	var input admin.CheckEmailInput
 
@@ -248,6 +251,7 @@ func (h *userAdminHandler) CheckEmailAvailability(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// Check Phone Availability
 func (h *userAdminHandler) CheckPhoneAvailability(c *gin.Context) {
 	var input admin.CheckPhoneInput
 
