@@ -6,6 +6,8 @@
 
 - Admin req
 
+- [x] Fix config: log and cors
+
 - [x]CORS CONFIG
 
 - [x] ~GET Log service

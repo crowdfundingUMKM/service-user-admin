@@ -25,7 +25,7 @@ func (h *userAdminHandler) GetLogtoAdmin(c *gin.Context) {
 
 	id := os.Getenv("ADMIN_ID")
 	if c.Param("id") == id {
-		content, err := ioutil.ReadFile("./log/gin.log")
+		content, err := ioutil.ReadFile("./tmp/gin.log")
 		if err != nil {
 			response := helper.APIResponse("Failed to get log", http.StatusBadRequest, "error", nil)
 			c.JSON(http.StatusBadRequest, response)
