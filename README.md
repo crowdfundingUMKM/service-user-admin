@@ -8,9 +8,13 @@
 
 - [x] Fix config: log and cors
 
+- [x] Setup Middleware Auth user(unix_id)
+- [x] Setup Middleware Auth admin(unix_id with os.Getenv("ADMIN_ID"))
+
 - [x]CORS CONFIG
 
 - [x] ~GET Log service
+    - Auth middleware admin, Uri(unix_id on env), 
 - [x] GET Service status
 - [x] POST Register
     - [x] POST Check email

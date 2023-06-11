@@ -22,9 +22,11 @@ func NewUserHandler(userService admin.Service, authService auth.Service) *userAd
 }
 
 func (h *userAdminHandler) GetLogtoAdmin(c *gin.Context) {
+	// get data from middleware
+	currentAdmin := c.MustGet("currentAdmin").(admin.User)
 
 	id := os.Getenv("ADMIN_ID")
-	if c.Param("id") == id {
+	if c.Param("id") == currentAdmin.UnixID && c.Param("id") == id {
 		content, err := ioutil.ReadFile("./tmp/gin.log")
 		if err != nil {
 			response := helper.APIResponse("Failed to get log", http.StatusBadRequest, "error", nil)
@@ -39,8 +41,9 @@ func (h *userAdminHandler) GetLogtoAdmin(c *gin.Context) {
 		}
 
 		c.String(http.StatusOK, string(content))
+		return
 	} else {
-		response := helper.APIResponse("Your not Root Admin, cannot Access", http.StatusUnprocessableEntity, "error", nil)
+		response := helper.APIResponse("Your not Root Admin & Wrong Uri, cannot Access", http.StatusUnprocessableEntity, "error", nil)
 		c.JSON(http.StatusNotFound, response)
 		return
 	}
