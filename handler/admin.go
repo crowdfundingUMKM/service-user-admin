@@ -22,10 +22,12 @@ func NewUserHandler(userService admin.Service, authService auth.Service) *userAd
 }
 
 func (h *userAdminHandler) GetLogtoAdmin(c *gin.Context) {
+	// get data from middleware
+	currentAdmin := c.MustGet("currentAdmin").(admin.User)
 
 	id := os.Getenv("ADMIN_ID")
-	if c.Param("id") == id {
-		content, err := ioutil.ReadFile("./log/gin.log")
+	if c.Param("id") == currentAdmin.UnixID && c.Param("id") == id {
+		content, err := ioutil.ReadFile("./tmp/gin.log")
 		if err != nil {
 			response := helper.APIResponse("Failed to get log", http.StatusBadRequest, "error", nil)
 			c.JSON(http.StatusBadRequest, response)
@@ -39,14 +41,15 @@ func (h *userAdminHandler) GetLogtoAdmin(c *gin.Context) {
 		}
 
 		c.String(http.StatusOK, string(content))
+		return
 	} else {
-		response := helper.APIResponse("Your not Root Admin, cannot Access", http.StatusUnprocessableEntity, "error", nil)
+		response := helper.APIResponse("Your not Root Admin & Wrong Uri, cannot Access", http.StatusUnprocessableEntity, "error", nil)
 		c.JSON(http.StatusNotFound, response)
 		return
 	}
 }
 
-// for admin get env
+// Get status service
 func (h *userAdminHandler) ServiceHealth(c *gin.Context) {
 	// check env open or not
 	errEnv := godotenv.Load()
@@ -96,6 +99,7 @@ func (h *userAdminHandler) ServiceHealth(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// Register User Admin
 func (h *userAdminHandler) RegisterUser(c *gin.Context) {
 	// tangkap input dari user
 	// map input dari user ke struct RegisterUserInput
@@ -154,6 +158,7 @@ func (h *userAdminHandler) RegisterUser(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// Login User Admin
 func (h *userAdminHandler) Login(c *gin.Context) {
 
 	var input admin.LoginInput
@@ -210,6 +215,7 @@ func (h *userAdminHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// Check Email Availability
 func (h *userAdminHandler) CheckEmailAvailability(c *gin.Context) {
 	var input admin.CheckEmailInput
 
@@ -245,6 +251,7 @@ func (h *userAdminHandler) CheckEmailAvailability(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// Check Phone Availability
 func (h *userAdminHandler) CheckPhoneAvailability(c *gin.Context) {
 	var input admin.CheckPhoneInput
 
@@ -278,6 +285,24 @@ func (h *userAdminHandler) CheckPhoneAvailability(c *gin.Context) {
 	}
 
 	response := helper.APIResponse(metaMessage, http.StatusOK, "success", data)
+	c.JSON(http.StatusOK, response)
+}
+
+// get user by middleware
+func (h *userAdminHandler) GetUser(c *gin.Context) {
+	currentUser := c.MustGet("currentUser").(admin.User)
+
+	// check f account deactive
+	if currentUser.StatusAccount == "deactive" {
+		errorMessage := gin.H{"errors": "Your account is deactive by admin"}
+		response := helper.APIResponse("Get user failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	formatter := admin.FormatterUser(currentUser, "")
+
+	response := helper.APIResponse("Successfuly get user by middleware", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 }
 

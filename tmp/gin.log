@@ -1,0 +1,20 @@
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /api/v1/log_service_admin/:id --> service-user-admin/handler.(*userAdminHandler).GetLogtoAdmin-fm (4 handlers)
+[GIN-debug] GET    /api/v1/service_status/:id --> service-user-admin/handler.(*userAdminHandler).ServiceHealth-fm (4 handlers)
+[GIN-debug] POST   /api/v1/email_check       --> service-user-admin/handler.(*userAdminHandler).CheckEmailAvailability-fm (4 handlers)
+[GIN-debug] POST   /api/v1/phone_check       --> service-user-admin/handler.(*userAdminHandler).CheckPhoneAvailability-fm (4 handlers)
+[GIN-debug] POST   /api/v1/register_admin    --> service-user-admin/handler.(*userAdminHandler).RegisterUser-fm (4 handlers)
+[GIN-debug] POST   /api/v1/login_admin       --> service-user-admin/handler.(*userAdminHandler).Login-fm (4 handlers)
+[GIN-debug] GET    /api/v1/get_user          --> service-user-admin/handler.(*userAdminHandler).GetUser-fm (5 handlers)
+[GIN-debug] PUT    /api/v1/update_admin/:unix_id --> service-user-admin/handler.(*userAdminHandler).UpdateUser-fm (5 handlers)
+[GIN-debug] POST   /api/v1/logout_admin      --> service-user-admin/handler.(*userAdminHandler).Logout-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on localhost:8081
+[GIN] 2023/06/11 - 15:43:46 | 404 |            0s |       127.0.0.1 | GET      "/api/v1/log_service/7d4aa4f2-90a"
+[GIN] 2023/06/11 - 15:43:57 | 200 |      5.6434ms |       127.0.0.1 | GET      "/api/v1/log_service_admin/7d4aa4f2-90a"

@@ -1,4 +1,4 @@
-package log
+package config
 
 import (
 	"io"
@@ -10,7 +10,7 @@ import (
 
 func InitLog() {
 	// setup log
-	f, err := os.Create("./log/gin.log")
+	f, err := os.Create("./tmp/gin.log")
 	if err != nil {
 		log.Fatal("cannot create open gin.log", err)
 	}
