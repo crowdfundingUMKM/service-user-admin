@@ -20,5 +20,5 @@ INSERT INTO `users` (`id`, `unix_id`,`name`, `email`, `phone`, `password_hash`, 
 
 -- Indexes for table `users`
 --
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+-- ALTER TABLE `users`
+--   ADD PRIMARY KEY (`id`);
