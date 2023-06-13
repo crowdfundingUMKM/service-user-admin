@@ -11,17 +11,13 @@ import (
 type Service interface {
 	DeactivateAccountUser(input DeactiveUserInput) (bool, error)
 	ActivateAccountUser(input DeactiveUserInput) (bool, error)
-
 	RegisterUser(input RegisterUserInput) (User, error)
 	Login(input LoginInput) (User, error)
+	SaveToken(UnixID string, Token string) (User, error)
 	IsEmailAvailable(input CheckEmailInput) (bool, error)
 	IsPhoneAvailable(input CheckPhoneInput) (bool, error)
-
 	GetUserByUnixID(UnixID string) (User, error)
-
 	UpdateUserByUnixID(UnixID string, input UpdateUserInput) (User, error)
-	SaveToken(UnixID string, Token string) (User, error)
-
 	DeleteToken(UnixID string) (User, error)
 }
 
