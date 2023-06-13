@@ -1,5 +1,9 @@
 package admin
 
+type DeactiveUserInput struct {
+	UnixID string `json:"unix_id" binding:"required"`
+}
+
 type RegisterUserInput struct {
 	Name     string `json:"name" binding:"required"`
 	Phone    string `json:"phone" binding:"required"`

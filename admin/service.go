@@ -9,6 +9,9 @@ import (
 )
 
 type Service interface {
+	DeactivateAccountUser(input DeactiveUserInput) (bool, error)
+	ActivateAccountUser(input DeactiveUserInput) (bool, error)
+
 	RegisterUser(input RegisterUserInput) (User, error)
 	Login(input LoginInput) (User, error)
 	IsEmailAvailable(input CheckEmailInput) (bool, error)
@@ -28,6 +31,36 @@ type service struct {
 
 func NewService(repository Repository) *service {
 	return &service{repository}
+}
+
+func (s *service) DeactivateAccountUser(input DeactiveUserInput) (bool, error) {
+	user, err := s.repository.FindByUnixID(input.UnixID)
+	user.StatusAccount = "Deactive"
+	_, err = s.repository.UpdateStatusAccount(user)
+
+	if err != nil {
+		return false, err
+	}
+
+	if user.UnixID == "" {
+		return true, nil
+	}
+	return true, nil
+}
+
+func (s *service) ActivateAccountUser(input DeactiveUserInput) (bool, error) {
+	user, err := s.repository.FindByUnixID(input.UnixID)
+	user.StatusAccount = "Active"
+	_, err = s.repository.UpdateStatusAccount(user)
+
+	if err != nil {
+		return false, err
+	}
+
+	if user.UnixID == "" {
+		return true, nil
+	}
+	return true, nil
 }
 
 func (s *service) RegisterUser(input RegisterUserInput) (User, error) {

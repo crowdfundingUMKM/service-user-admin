@@ -13,14 +13,15 @@
 
 - [x]CORS CONFIG
 
-- [ ] POST deactive admin
-    - [ ] with midlleware auth admin
-- [ ] POST active admin
-    - [ ] with midlleware auth admin
+- [x] POST deactive admin
+    - [x] with midlleware auth admin
+- [x] POST active admin
+    - [x] with midlleware auth admin
 
 - [x] ~GET Log service
     - Auth middleware admin, Uri(unix_id on env), 
 - [x] GET Service status
+    - Auth middleware admin, Uri(unix_id on env), 
 - [x] POST Register
     - [x] POST Check email
     - [x] POST Check phone
@@ -38,6 +39,7 @@
 
 - [x] POST Logout
     - Delete token 
+
 
 
 ### CI/CD Github Actions
