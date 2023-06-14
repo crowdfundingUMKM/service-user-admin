@@ -56,3 +56,17 @@ func FormatterUserDetail(user User, updatedUser User) UserDetailFormatter {
 	}
 	return formatter
 }
+
+type UserAdmin struct {
+	UnixAdmin          string `json:"unix_admin"`
+	StatusAccountAdmin string `json:"status_account_admin"`
+}
+
+// get user admin status
+func FormatterUserAdminID(user User) UserAdmin {
+	formatter := UserAdmin{
+		UnixAdmin:          user.UnixID,
+		StatusAccountAdmin: user.StatusAccount,
+	}
+	return formatter
+}

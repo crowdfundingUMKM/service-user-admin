@@ -13,10 +13,15 @@
 
 - [x]CORS CONFIG
 
+### Admin
 - [x] POST deactive admin
-    - [x] with midlleware auth admin
+    - [x] with midlleware auth admin 
 - [x] POST active admin
     - [x] with midlleware auth admin
+
+### Investor
+- [x] GET getAdminID/:unix_id
+    - not use middleware auth
 
 - [x] ~GET Log service
     - Auth middleware admin, Uri(unix_id on env), 

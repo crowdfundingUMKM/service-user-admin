@@ -31,7 +31,7 @@ func NewService(repository Repository) *service {
 
 func (s *service) DeactivateAccountUser(input DeactiveUserInput) (bool, error) {
 	user, err := s.repository.FindByUnixID(input.UnixID)
-	user.StatusAccount = "Deactive"
+	user.StatusAccount = "deactive"
 	_, err = s.repository.UpdateStatusAccount(user)
 
 	if err != nil {
@@ -46,7 +46,7 @@ func (s *service) DeactivateAccountUser(input DeactiveUserInput) (bool, error) {
 
 func (s *service) ActivateAccountUser(input DeactiveUserInput) (bool, error) {
 	user, err := s.repository.FindByUnixID(input.UnixID)
-	user.StatusAccount = "Active"
+	user.StatusAccount = "active"
 	_, err = s.repository.UpdateStatusAccount(user)
 
 	if err != nil {
@@ -202,3 +202,17 @@ func (s *service) DeleteToken(UnixID string) (User, error) {
 
 	return updatedUser, nil
 }
+
+// give info id user admin
+// func (s *service) GetInfoAdmin(UnixID string) (User, error) {
+// 	user, err := s.repository.FindByUnixID(UnixID)
+// 	if err != nil {
+// 		return user, err
+// 	}
+
+// 	if user.UnixID == "" {
+// 		return user, errors.New("No user found on with that ID")
+// 	}
+
+// 	return user, nil
+// }

@@ -23,7 +23,7 @@ type CheckEmailInput struct {
 type CheckPhoneInput struct {
 	Phone string `json:"phone" binding:"required"`
 }
-type GetUserDetailInput struct {
+type GetUserIdInput struct {
 	UnixID string `uri:"unix_id" binding:"required"`
 }
 

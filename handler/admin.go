@@ -397,7 +397,7 @@ func (h *userAdminHandler) GetUser(c *gin.Context) {
 
 // update user by unix id
 func (h *userAdminHandler) UpdateUser(c *gin.Context) {
-	var inputID admin.GetUserDetailInput
+	var inputID admin.GetUserIdInput
 
 	// check id is valid or not
 	err := c.ShouldBindUri(&inputID)
@@ -439,6 +439,32 @@ func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 	response := helper.APIResponse("User has been updated", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 	return
+}
+
+// get info id admin not use middleware
+func (h *userAdminHandler) GetInfoAdminID(c *gin.Context) {
+	var inputID admin.GetUserIdInput
+
+	// check id is valid or not
+	err := c.ShouldBindUri(&inputID)
+	if err != nil {
+		response := helper.APIResponse("Failed get user admin and status", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	user, err := h.userService.GetUserByUnixID(inputID.UnixID)
+	if err != nil {
+		response := helper.APIResponse("Get user failed", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	formatter := admin.FormatterUserAdminID(user)
+
+	response := helper.APIResponse("Successfuly get user id and status", http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+
 }
 
 // Logout user
