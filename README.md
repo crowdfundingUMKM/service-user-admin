@@ -19,9 +19,7 @@
 - [x] POST active admin
     - [x] with midlleware auth admin
 
-### Investor
-- [x] GET getAdminID/:unix_id
-    - not use middleware auth
+
 
 - [x] ~GET Log service
     - Auth middleware admin, Uri(unix_id on env), 
@@ -45,7 +43,9 @@
 - [x] POST Logout
     - Delete token 
 
-
+### Investor
+- [x] GET getAdminID/:unix_id
+    - not use middleware auth
 
 ### CI/CD Github Actions
 
