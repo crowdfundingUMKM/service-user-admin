@@ -60,7 +60,7 @@ func main() {
 	api.POST("/login_admin", userHandler.Login)
 
 	// route give information to user about admin
-	api.GET("/getAdminID/:unix_id", userHandler.GetInfoAdminID)
+	api.GET("/admin/getAdminID/:unix_id", userHandler.GetInfoAdminID)
 
 	// get user by unix_id
 	api.GET("/get_user", middleware.AuthMiddleware(authService, userAdminService), userHandler.GetUser)
