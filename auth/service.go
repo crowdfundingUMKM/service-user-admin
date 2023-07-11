@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"os"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -25,6 +26,7 @@ func NewService() *jwtService {
 func (s *jwtService) GenerateToken(userUnixID string) (string, error) {
 	claim := jwt.MapClaims{}
 	claim["unix_id"] = userUnixID
+	claim["exp"] = time.Now().Add(2 * 24 * time.Hour).Unix() // Expires in 2 days (48 hours)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 
@@ -49,5 +51,17 @@ func (s *jwtService) ValidateToken(endcodedToken string) (*jwt.Token, error) {
 	if err != nil {
 		return token, err
 	}
+
+	// check status token is valid or not
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		exp := claims["exp"].(float64)
+		expTime := time.Unix(int64(exp), 0)
+		if time.Now().After(expTime) {
+			return token, errors.New("Token has expired")
+		}
+	} else {
+		return token, errors.New("Invalid token")
+	}
+
 	return token, nil
 }
