@@ -10,7 +10,7 @@
 - [x] Setup Middleware Auth admin(unix_id with os.Getenv("ADMIN_ID"))
 - [-] Setup Expire for JWT
 
-- [x]CORS CONFIG
+- [x] CORS CONFIG
 
 ### Admin
 
