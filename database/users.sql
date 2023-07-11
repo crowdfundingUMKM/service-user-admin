@@ -32,7 +32,7 @@ INSERT INTO `users` (`id`, `unix_id`,`name`, `email`, `phone`, `password_hash`, 
 -- BEGIN
 --     DELETE FROM users
 --     WHERE token IS NOT NULL
-    -- AND created_at < NOW() - INTERVAL 2 DAY;
+--     AND created_at < NOW() - INTERVAL 2 DAY;
 -- END //
 
 -- DELIMITER ;
