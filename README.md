@@ -14,6 +14,7 @@
 
 ### Admin
 
+- Root admin by env ADMIN_ID
 - [x] POST deactive admin
   - [x] with midlleware auth admin
 - [x] POST active admin
@@ -21,19 +22,27 @@
   - [x] with midlleware auth admin
 
 - [x] ~GET Log service
-  - Auth middleware admin, Uri(unix_id on env),
+  - Auth middleware admin, Uri(unix_id on env)
 - [x] GET Service status
-  - Auth middleware admin, Uri(unix_id on env),
+  - Auth middleware admin, Uri(unix_id on env)
+- [x] PUT Update User profile admin
+  - Update data can be empty content
+  - update with name, email, phone
+  - Auth middleware admin, Uri(unix_id on env)
+- [x] POST get all user by admin
+  - Auth middleware admin, Uri(unix_id on env)
+
 - [x] POST Register
   - [x] POST Check email
   - [x] POST Check phone
 - [x] POST Login
 
 - Dashboard (Middleware Auth)
-- [x] PUT Update User profile admin
+- [x] PUT Update User profile 
   - Update data can be empty content
   - update with name, email, phone
 - [x] GET User Profile
+  - Auth middleware 
 
   - with middleware on token
 
