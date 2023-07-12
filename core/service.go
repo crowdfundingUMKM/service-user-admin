@@ -20,6 +20,7 @@ type Service interface {
 	UpdateUserByUnixID(UnixID string, input UpdateUserInput) (User, error)
 	DeleteToken(UnixID string) (User, error)
 	DeleteUsers(UnixID string) (User, error)
+	GetAllUsers() ([]User, error)
 }
 
 type service struct {
@@ -58,6 +59,15 @@ func (s *service) ActivateAccountUser(input DeactiveUserInput) (bool, error) {
 		return true, nil
 	}
 	return true, nil
+}
+
+// get all users
+func (s *service) GetAllUsers() ([]User, error) {
+	users, err := s.repository.GetAllUser()
+	if err != nil {
+		return users, err
+	}
+	return users, nil
 }
 
 // delete user
