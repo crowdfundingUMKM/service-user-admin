@@ -1,4 +1,8 @@
-package admin
+package core
+
+type DeactiveUserInput struct {
+	UnixID string `json:"unix_id" binding:"required"`
+}
 
 type RegisterUserInput struct {
 	Name     string `json:"name" binding:"required"`
@@ -19,7 +23,7 @@ type CheckEmailInput struct {
 type CheckPhoneInput struct {
 	Phone string `json:"phone" binding:"required"`
 }
-type GetUserDetailInput struct {
+type GetUserIdInput struct {
 	UnixID string `uri:"unix_id" binding:"required"`
 }
 
@@ -28,4 +32,9 @@ type UpdateUserInput struct {
 	Name  string `json:"name"`
 	Phone string `json:"phone"`
 	Email string `json:"email"`
+}
+
+// delete user
+type DeleteUserInput struct {
+	UnixID string `json:"unix_id" binding:"required"`
 }

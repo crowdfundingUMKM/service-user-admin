@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"service-user-admin/admin"
 	"service-user-admin/auth"
 	"service-user-admin/config"
+	"service-user-admin/core"
 	"service-user-admin/database"
 	"service-user-admin/handler"
 	"service-user-admin/middleware"
@@ -26,10 +26,10 @@ func main() {
 
 	// setup repository
 	db := database.NewConnectionDB()
-	userAdminRepository := admin.NewRepository(db)
+	userAdminRepository := core.NewRepository(db)
 
 	// SETUP SERVICE
-	userAdminService := admin.NewService(userAdminRepository)
+	userAdminService := core.NewService(userAdminRepository)
 	authService := auth.NewService()
 
 	// setup handler
@@ -48,18 +48,24 @@ func main() {
 	api := router.Group("api/v1")
 
 	// Rounting admin-health Root Admin
-	api.GET("/log_service_admin/:id", middleware.AdminMiddleware(authService, userAdminService), userHandler.GetLogtoAdmin)
-	api.GET("/service_status/:id", userHandler.ServiceHealth)
-
+	api.GET("/log_service_admin/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.GetLogtoAdmin)
+	api.GET("/service_status/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.ServiceHealth)
+	api.POST("/deactive_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeactiveUser)
+	api.POST("/active_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.ActiveUser)
+	api.POST("/delete_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeleteUser)
+	api.PUT("/update_user_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdateUserByAdmin)
 	// Rounting admin
 	api.POST("/email_check", userHandler.CheckEmailAvailability)
 	api.POST("/phone_check", userHandler.CheckPhoneAvailability)
 	api.POST("/register_admin", userHandler.RegisterUser)
 	api.POST("/login_admin", userHandler.Login)
 
+	// route give information to user about admin
+	api.GET("/admin/getAdminID/:unix_id", userHandler.GetInfoAdminID)
+
 	// get user by unix_id
 	api.GET("/get_user", middleware.AuthMiddleware(authService, userAdminService), userHandler.GetUser)
-	api.PUT("/update_admin/:unix_id", middleware.AuthMiddleware(authService, userAdminService), userHandler.UpdateUser)
+	api.PUT("/update_profile/:unix_id", middleware.AuthMiddleware(authService, userAdminService), userHandler.UpdateUser)
 
 	api.POST("/logout_admin", middleware.AuthMiddleware(authService, userAdminService), userHandler.Logout)
 

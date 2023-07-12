@@ -1,4 +1,4 @@
-package admin
+package core
 
 import "gorm.io/gorm"
 
@@ -9,9 +9,9 @@ type Repository interface {
 	FindByEmail(email string) (User, error)
 	UpdateToken(user User) (User, error)
 	FindByPhone(phone string) (User, error)
-
-	// update user
 	Update(user User) (User, error)
+	UpdateStatusAccount(user User) (User, error)
+	DeleteUser(user User) (User, error)
 }
 
 type repository struct {
@@ -79,6 +79,27 @@ func (r *repository) FindByPhone(phone string) (User, error) {
 
 func (r *repository) Update(user User) (User, error) {
 	err := r.db.Model(&user).Updates(User{Name: user.Name, Phone: user.Phone, Email: user.Email}).Error
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (r *repository) UpdateStatusAccount(user User) (User, error) {
+	err := r.db.Model(&user).Update("status_account", user.StatusAccount).Error
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+// delete user
+func (r *repository) DeleteUser(user User) (User, error) {
+	err := r.db.Delete(&user).Error
 
 	if err != nil {
 		return user, err
