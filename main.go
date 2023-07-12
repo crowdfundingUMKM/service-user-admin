@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"service-user-admin/admin"
 	"service-user-admin/auth"
 	"service-user-admin/config"
+	"service-user-admin/core"
 	"service-user-admin/database"
 	"service-user-admin/handler"
 	"service-user-admin/middleware"
@@ -26,10 +26,10 @@ func main() {
 
 	// setup repository
 	db := database.NewConnectionDB()
-	userAdminRepository := admin.NewRepository(db)
+	userAdminRepository := core.NewRepository(db)
 
 	// SETUP SERVICE
-	userAdminService := admin.NewService(userAdminRepository)
+	userAdminService := core.NewService(userAdminRepository)
 	authService := auth.NewService()
 
 	// setup handler
@@ -52,6 +52,7 @@ func main() {
 	api.GET("/service_status/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.ServiceHealth)
 	api.POST("/deactive_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeactiveUser)
 	api.POST("/active_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.ActiveUser)
+	api.POST("/delete_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeleteUser)
 
 	// Rounting admin
 	api.POST("/email_check", userHandler.CheckEmailAvailability)

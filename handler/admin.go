@@ -4,8 +4,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"service-user-admin/admin"
 	"service-user-admin/auth"
+	"service-user-admin/core"
 	"service-user-admin/helper"
 
 	"github.com/gin-gonic/gin"
@@ -13,18 +13,18 @@ import (
 )
 
 type userAdminHandler struct {
-	userService admin.Service
+	userService core.Service
 	authService auth.Service
 }
 
-func NewUserHandler(userService admin.Service, authService auth.Service) *userAdminHandler {
+func NewUserHandler(userService core.Service, authService auth.Service) *userAdminHandler {
 	return &userAdminHandler{userService, authService}
 }
 
 // Super Admin
 func (h *userAdminHandler) GetLogtoAdmin(c *gin.Context) {
 	// get data from middleware
-	currentAdmin := c.MustGet("currentAdmin").(admin.User)
+	currentAdmin := c.MustGet("currentAdmin").(core.User)
 
 	id := os.Getenv("ADMIN_ID")
 	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
@@ -53,7 +53,7 @@ func (h *userAdminHandler) GetLogtoAdmin(c *gin.Context) {
 // Get status service
 func (h *userAdminHandler) ServiceHealth(c *gin.Context) {
 	// check env open or not
-	currentAdmin := c.MustGet("currentAdmin").(admin.User)
+	currentAdmin := c.MustGet("currentAdmin").(core.User)
 
 	errEnv := godotenv.Load()
 	if errEnv != nil {
@@ -110,8 +110,8 @@ func (h *userAdminHandler) ServiceHealth(c *gin.Context) {
 
 // Deactive admin user
 func (h *userAdminHandler) DeactiveUser(c *gin.Context) {
-	var input admin.DeactiveUserInput
-	currentAdmin := c.MustGet("currentAdmin").(admin.User)
+	var input core.DeactiveUserInput
+	currentAdmin := c.MustGet("currentAdmin").(core.User)
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -149,9 +149,9 @@ func (h *userAdminHandler) DeactiveUser(c *gin.Context) {
 }
 
 func (h *userAdminHandler) ActiveUser(c *gin.Context) {
-	var input admin.DeactiveUserInput
+	var input core.DeactiveUserInput
 
-	currentAdmin := c.MustGet("currentAdmin").(admin.User)
+	currentAdmin := c.MustGet("currentAdmin").(core.User)
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		errors := helper.FormatValidationError(err)
@@ -194,7 +194,7 @@ func (h *userAdminHandler) RegisterUser(c *gin.Context) {
 	// map input dari user ke struct RegisterUserInput
 	// struct di atas kita passing sebagai parameter service
 
-	var input admin.RegisterUserInput
+	var input core.RegisterUserInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -222,7 +222,7 @@ func (h *userAdminHandler) RegisterUser(c *gin.Context) {
 		}
 	}
 
-	formatter := admin.FormatterUser(newUser, token)
+	formatter := core.FormatterUser(newUser, token)
 
 	if formatter.StatusAccount == "active" {
 		_, err = h.userService.SaveToken(newUser.UnixID, token)
@@ -247,10 +247,53 @@ func (h *userAdminHandler) RegisterUser(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// delete user
+func (h *userAdminHandler) DeleteUser(c *gin.Context) {
+	var input core.DeleteUserInput
+
+	currentAdmin := c.MustGet("currentAdmin").(core.User)
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("User Not Found", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	// check id admin
+	id := os.Getenv("ADMIN_ID")
+	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
+		// get id user
+
+		// deactive user
+		delete, err := h.userService.DeleteUsers(input.UnixID)
+
+		data := gin.H{
+			"success_delete": delete,
+		}
+
+		if err != nil {
+			dataError := gin.H{
+				"error": "User Not Found or Already Deleted",
+			}
+			response := helper.APIResponse("Failed to delete user", http.StatusBadRequest, "error", dataError)
+			c.JSON(http.StatusBadRequest, response)
+			return
+		}
+		response := helper.APIResponse("User has been delete", http.StatusOK, "success", data)
+		c.JSON(http.StatusOK, response)
+	} else {
+		response := helper.APIResponse("Your not Admin, cannot Access", http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusNotFound, response)
+		return
+	}
+}
+
 // Login User Admin
 func (h *userAdminHandler) Login(c *gin.Context) {
 
-	var input admin.LoginInput
+	var input core.LoginInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -297,7 +340,7 @@ func (h *userAdminHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
-	formatter := admin.FormatterUser(loggedinUser, token)
+	formatter := core.FormatterUser(loggedinUser, token)
 
 	response := helper.APIResponse("Succesfuly loggedin", http.StatusOK, "success", formatter)
 
@@ -306,7 +349,7 @@ func (h *userAdminHandler) Login(c *gin.Context) {
 
 // Check Email Availability
 func (h *userAdminHandler) CheckEmailAvailability(c *gin.Context) {
-	var input admin.CheckEmailInput
+	var input core.CheckEmailInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -342,7 +385,7 @@ func (h *userAdminHandler) CheckEmailAvailability(c *gin.Context) {
 
 // Check Phone Availability
 func (h *userAdminHandler) CheckPhoneAvailability(c *gin.Context) {
-	var input admin.CheckPhoneInput
+	var input core.CheckPhoneInput
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -379,7 +422,7 @@ func (h *userAdminHandler) CheckPhoneAvailability(c *gin.Context) {
 
 // get user by middleware
 func (h *userAdminHandler) GetUser(c *gin.Context) {
-	currentUser := c.MustGet("currentUser").(admin.User)
+	currentUser := c.MustGet("currentUser").(core.User)
 
 	// check f account deactive
 	if currentUser.StatusAccount == "deactive" {
@@ -389,7 +432,7 @@ func (h *userAdminHandler) GetUser(c *gin.Context) {
 		return
 	}
 
-	formatter := admin.FormatterUser(currentUser, "")
+	formatter := core.FormatterUser(currentUser, "")
 
 	response := helper.APIResponse("Successfuly get user by middleware", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
@@ -397,7 +440,7 @@ func (h *userAdminHandler) GetUser(c *gin.Context) {
 
 // update user by unix id
 func (h *userAdminHandler) UpdateUser(c *gin.Context) {
-	var inputID admin.GetUserIdInput
+	var inputID core.GetUserIdInput
 
 	// check id is valid or not
 	err := c.ShouldBindUri(&inputID)
@@ -407,7 +450,7 @@ func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	var inputData admin.UpdateUserInput
+	var inputData core.UpdateUserInput
 
 	err = c.ShouldBindJSON(&inputData)
 	if err != nil {
@@ -419,7 +462,7 @@ func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	currentUser := c.MustGet("currentUser").(admin.User)
+	currentUser := c.MustGet("currentUser").(core.User)
 
 	if currentUser.UnixID != inputID.UnixID {
 		response := helper.APIResponse("Update user failed, because you are not auth", http.StatusBadRequest, "error", nil)
@@ -434,7 +477,7 @@ func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	formatter := admin.FormatterUserDetail(currentUser, updatedUser)
+	formatter := core.FormatterUserDetail(currentUser, updatedUser)
 
 	response := helper.APIResponse("User has been updated", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
@@ -443,7 +486,7 @@ func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 
 // get info id admin not use middleware
 func (h *userAdminHandler) GetInfoAdminID(c *gin.Context) {
-	var inputID admin.GetUserIdInput
+	var inputID core.GetUserIdInput
 
 	// check id is valid or not
 	err := c.ShouldBindUri(&inputID)
@@ -460,7 +503,7 @@ func (h *userAdminHandler) GetInfoAdminID(c *gin.Context) {
 		return
 	}
 
-	formatter := admin.FormatterUserAdminID(user)
+	formatter := core.FormatterUserAdminID(user)
 
 	response := helper.APIResponse("Successfuly get user id and status", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
@@ -470,7 +513,7 @@ func (h *userAdminHandler) GetInfoAdminID(c *gin.Context) {
 // Logout user
 func (h *userAdminHandler) Logout(c *gin.Context) {
 	// get data from middleware
-	currentUser := c.MustGet("currentUser").(admin.User)
+	currentUser := c.MustGet("currentUser").(core.User)
 
 	// check if token is empty
 	if currentUser.Token == "" {

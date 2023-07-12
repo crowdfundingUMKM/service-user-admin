@@ -1,4 +1,4 @@
-package admin
+package core
 
 type UserAdminFormatter struct {
 	ID            int    `json:"id"`

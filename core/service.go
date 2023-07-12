@@ -1,4 +1,4 @@
-package admin
+package core
 
 import (
 	"errors"
@@ -19,6 +19,7 @@ type Service interface {
 	GetUserByUnixID(UnixID string) (User, error)
 	UpdateUserByUnixID(UnixID string, input UpdateUserInput) (User, error)
 	DeleteToken(UnixID string) (User, error)
+	DeleteUsers(UnixID string) (User, error)
 }
 
 type service struct {
@@ -57,6 +58,18 @@ func (s *service) ActivateAccountUser(input DeactiveUserInput) (bool, error) {
 		return true, nil
 	}
 	return true, nil
+}
+
+// delete user
+func (s *service) DeleteUsers(UnixID string) (User, error) {
+	user, err := s.repository.FindByUnixID(UnixID)
+	_, err = s.repository.DeleteUser(user)
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
 }
 
 func (s *service) RegisterUser(input RegisterUserInput) (User, error) {

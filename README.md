@@ -52,3 +52,13 @@
 - [x] ~CI/CD Github Actions
 - [] Push to Docker Hub
 - [] Push to GCP registry
+
+### Note
+
+- For update user this is server must use middleware auth admin same env ADMIN_ID
+- Admin can update user profile
+- Admin can deactive user
+- Admin can active user
+- Admin can get user profile
+- Remember to set env ADMIN_ID same with unix_id on user 
+

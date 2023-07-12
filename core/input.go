@@ -1,4 +1,4 @@
-package admin
+package core
 
 type DeactiveUserInput struct {
 	UnixID string `json:"unix_id" binding:"required"`
@@ -32,4 +32,9 @@ type UpdateUserInput struct {
 	Name  string `json:"name"`
 	Phone string `json:"phone"`
 	Email string `json:"email"`
+}
+
+// delete user
+type DeleteUserInput struct {
+	UnixID string `json:"unix_id" binding:"required"`
 }
