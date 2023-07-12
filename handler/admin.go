@@ -247,6 +247,51 @@ func (h *userAdminHandler) RegisterUser(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// update user by admin
+func (h *userAdminHandler) UpdateUserByAdmin(c *gin.Context) {
+	var input core.UpdateUserInput
+
+	currentAdmin := c.MustGet("currentAdmin").(core.User)
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("User Not Found", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	// check id admin
+	id := os.Getenv("ADMIN_ID")
+	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
+		// get id user by body unix_id target
+		unixId := c.Param("unix_id")
+
+		// deactive user
+		update, err := h.userService.UpdateUserByUnixID(unixId, input)
+
+		data := gin.H{
+			"success_update": update,
+		}
+
+		if err != nil {
+			dataError := gin.H{
+				"errors": err.Error(),
+			}
+			response := helper.APIResponse("Failed to update user", http.StatusBadRequest, "error", dataError)
+			c.JSON(http.StatusBadRequest, response)
+			return
+		}
+		response := helper.APIResponse("User has been update", http.StatusOK, "success", data)
+		c.JSON(http.StatusOK, response)
+	} else {
+		response := helper.APIResponse("Your not Admin, cannot Access", http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusNotFound, response)
+		return
+	}
+
+}
+
 // delete user
 func (h *userAdminHandler) DeleteUser(c *gin.Context) {
 	var input core.DeleteUserInput

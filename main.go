@@ -53,7 +53,7 @@ func main() {
 	api.POST("/deactive_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeactiveUser)
 	api.POST("/active_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.ActiveUser)
 	api.POST("/delete_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeleteUser)
-
+	api.PUT("/update_user_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdateUserByAdmin)
 	// Rounting admin
 	api.POST("/email_check", userHandler.CheckEmailAvailability)
 	api.POST("/phone_check", userHandler.CheckPhoneAvailability)
@@ -65,7 +65,8 @@ func main() {
 
 	// get user by unix_id
 	api.GET("/get_user", middleware.AuthMiddleware(authService, userAdminService), userHandler.GetUser)
-	api.PUT("/update_admin/:unix_id", middleware.AuthMiddleware(authService, userAdminService), userHandler.UpdateUser)
+	api.PUT("/update_profile/:unix_id", middleware.AuthMiddleware(authService, userAdminService), userHandler.UpdateUser)
+
 	api.POST("/logout_admin", middleware.AuthMiddleware(authService, userAdminService), userHandler.Logout)
 
 	// end Rounting
