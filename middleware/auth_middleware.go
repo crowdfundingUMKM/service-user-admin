@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"net/http"
-	"service-user-admin/admin"
 	"service-user-admin/auth"
+	"service-user-admin/core"
 	"service-user-admin/helper"
 	"strings"
 
@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthMiddleware(authService auth.Service, userService admin.Service) gin.HandlerFunc {
+func AuthMiddleware(authService auth.Service, userService core.Service) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")

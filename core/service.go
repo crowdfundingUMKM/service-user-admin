@@ -1,4 +1,4 @@
-package admin
+package core
 
 import (
 	"errors"
@@ -9,17 +9,17 @@ import (
 )
 
 type Service interface {
+	DeactivateAccountUser(input DeactiveUserInput) (bool, error)
+	ActivateAccountUser(input DeactiveUserInput) (bool, error)
 	RegisterUser(input RegisterUserInput) (User, error)
 	Login(input LoginInput) (User, error)
+	SaveToken(UnixID string, Token string) (User, error)
 	IsEmailAvailable(input CheckEmailInput) (bool, error)
 	IsPhoneAvailable(input CheckPhoneInput) (bool, error)
-
 	GetUserByUnixID(UnixID string) (User, error)
-
 	UpdateUserByUnixID(UnixID string, input UpdateUserInput) (User, error)
-	SaveToken(UnixID string, Token string) (User, error)
-
 	DeleteToken(UnixID string) (User, error)
+	DeleteUsers(UnixID string) (User, error)
 }
 
 type service struct {
@@ -28,6 +28,48 @@ type service struct {
 
 func NewService(repository Repository) *service {
 	return &service{repository}
+}
+
+func (s *service) DeactivateAccountUser(input DeactiveUserInput) (bool, error) {
+	user, err := s.repository.FindByUnixID(input.UnixID)
+	user.StatusAccount = "deactive"
+	_, err = s.repository.UpdateStatusAccount(user)
+
+	if err != nil {
+		return false, err
+	}
+
+	if user.UnixID == "" {
+		return true, nil
+	}
+	return true, nil
+}
+
+func (s *service) ActivateAccountUser(input DeactiveUserInput) (bool, error) {
+	user, err := s.repository.FindByUnixID(input.UnixID)
+	user.StatusAccount = "active"
+	_, err = s.repository.UpdateStatusAccount(user)
+
+	if err != nil {
+		return false, err
+	}
+
+	if user.UnixID == "" {
+		return true, nil
+	}
+	return true, nil
+}
+
+// delete user
+func (s *service) DeleteUsers(UnixID string) (User, error) {
+	user, err := s.repository.FindByUnixID(UnixID)
+	_, err = s.repository.DeleteUser(user)
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
 }
 
 func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
@@ -173,3 +215,17 @@ func (s *service) DeleteToken(UnixID string) (User, error) {
 
 	return updatedUser, nil
 }
+
+// give info id user admin
+// func (s *service) GetInfoAdmin(UnixID string) (User, error) {
+// 	user, err := s.repository.FindByUnixID(UnixID)
+// 	if err != nil {
+// 		return user, err
+// 	}
+
+// 	if user.UnixID == "" {
+// 		return user, errors.New("No user found on with that ID")
+// 	}
+
+// 	return user, nil
+// }
