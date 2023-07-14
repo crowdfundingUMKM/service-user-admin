@@ -31,6 +31,8 @@
   - Auth middleware admin, Uri(unix_id on env)
 - [x] POST get all user by admin
   - Auth middleware admin, Uri(unix_id on env)
+- [x] PUT update password by admin
+  - Auth middleware admin, Uri(unix_id on env)
 
 - [x] POST Register
   - [x] POST Check email
