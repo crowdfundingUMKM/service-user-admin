@@ -12,6 +12,7 @@ type User struct {
 	AvatarFileName string
 	StatusAccount  string
 	Token          string
+	RefAdmin       string
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 }
