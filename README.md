@@ -43,6 +43,8 @@
   - update with name, email, phone
 - [x] GET User Profile
   - Auth middleware 
+- [x] PUT update password
+  - Auth middleware
 
   - with middleware on token
 
