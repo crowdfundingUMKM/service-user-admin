@@ -19,6 +19,7 @@ type Service interface {
 	GetUserByUnixID(UnixID string) (User, error)
 	UpdateUserByUnixID(UnixID string, input UpdateUserInput) (User, error)
 	UpdatePasswordByUnixID(UnixID string, input UpdatePasswordInput) (User, error)
+	UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdminInput) (User, error)
 	DeleteToken(UnixID string) (User, error)
 	DeleteUsers(UnixID string) (User, error)
 	GetAllUsers() ([]User, error)
@@ -256,6 +257,32 @@ func (s *service) UpdatePasswordByUnixID(UnixID string, input UpdatePasswordInpu
 
 	if err != nil {
 		return user, err
+	}
+
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)
+
+	if err != nil {
+		return user, err
+	}
+
+	user.PasswordHash = string(passwordHash)
+
+	updatedUser, err := s.repository.UpdatePassword(user)
+	if err != nil {
+		return updatedUser, err
+	}
+
+	return updatedUser, nil
+}
+
+func (s *service) UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdminInput) (User, error) {
+	user, err := s.repository.FindByUnixID(UnixID)
+	if err != nil {
+		return user, err
+	}
+
+	if user.UnixID == "" {
+		return user, errors.New("No user found on with that ID")
 	}
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)

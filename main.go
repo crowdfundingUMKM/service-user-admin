@@ -54,6 +54,10 @@ func main() {
 	api.POST("/active_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.ActiveUser)
 	api.POST("/delete_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeleteUser)
 	api.PUT("/update_user_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdateUserByAdmin)
+
+	// update pass by admin
+	api.PUT("/update_password_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdatePasswordByAdmin)
+
 	api.GET("/get_all_user_by_admin/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.GetAllUserData)
 	// Rounting admin
 	api.POST("/email_check", userHandler.CheckEmailAvailability)

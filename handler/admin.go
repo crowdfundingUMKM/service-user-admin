@@ -595,6 +595,45 @@ func (h *userAdminHandler) UpdatePassword(c *gin.Context) {
 	return
 }
 
+// update password user by admin
+func (h *userAdminHandler) UpdatePasswordByAdmin(c *gin.Context) {
+	var inputID core.GetUserIdInput
+
+	// check id is valid or not
+	err := c.ShouldBindUri(&inputID)
+	if err != nil {
+		response := helper.APIResponse("Update password failed", http.StatusBadRequest, "error", err.Error())
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	var inputData core.UpdatePasswordByAdminInput
+
+	err = c.ShouldBindJSON(&inputData)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Update password failed, input data failure", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentAdmin").(core.User)
+
+	updatedUser, err := h.userService.UpdatePasswordByAdmin(inputID.UnixID, inputData)
+	if err != nil {
+		response := helper.APIResponse("Update password failed", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	formatter := core.FormatterUserDetail(currentUser, updatedUser)
+	response := helper.APIResponse("Password has been updated By Admin Master", http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+	return
+}
+
 // get info id admin not use middleware
 func (h *userAdminHandler) GetInfoAdminID(c *gin.Context) {
 	var inputID core.GetUserIdInput
