@@ -38,3 +38,8 @@ type UpdateUserInput struct {
 type DeleteUserInput struct {
 	UnixID string `json:"unix_id" binding:"required"`
 }
+
+type UpdatePasswordInput struct {
+	OldPassword string `json:"old_password" binding:"required"`
+	NewPassword string `json:"new_password" binding:"required"`
+}

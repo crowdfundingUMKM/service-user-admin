@@ -13,6 +13,7 @@ type Repository interface {
 	UpdateStatusAccount(user User) (User, error)
 	DeleteUser(user User) (User, error)
 	GetAllUser() ([]User, error)
+	UpdatePassword(user User) (User, error)
 }
 
 type repository struct {
@@ -114,6 +115,17 @@ func (r *repository) GetAllUser() ([]User, error) {
 	var user []User
 
 	err := r.db.Find(&user).Error
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+// update password
+func (r *repository) UpdatePassword(user User) (User, error) {
+	err := r.db.Model(&user).Update("password_hash", user.PasswordHash).Error
 
 	if err != nil {
 		return user, err
