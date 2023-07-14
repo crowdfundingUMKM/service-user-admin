@@ -187,6 +187,26 @@ func (h *userAdminHandler) ActiveUser(c *gin.Context) {
 	}
 }
 
+// get all user by admin
+func (h *userAdminHandler) GetAllUserData(c *gin.Context) {
+	currentAdmin := c.MustGet("currentAdmin").(core.User)
+	id := os.Getenv("ADMIN_ID")
+	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
+		users, err := h.userService.GetAllUsers()
+		if err != nil {
+			response := helper.APIResponse("Failed to get user", http.StatusBadRequest, "error", nil)
+			c.JSON(http.StatusBadRequest, response)
+			return
+		}
+		response := helper.APIResponse("List of user", http.StatusOK, "success", users)
+		c.JSON(http.StatusOK, response)
+	} else {
+		response := helper.APIResponse("Your not Admin, cannot Access", http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusNotFound, response)
+		return
+	}
+}
+
 // User Admin
 // Register User Admin
 func (h *userAdminHandler) RegisterUser(c *gin.Context) {
