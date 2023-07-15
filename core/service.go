@@ -86,6 +86,64 @@ func (s *service) DeleteUsers(UnixID string) (User, error) {
 	return user, nil
 }
 
+func (s *service) UpdatePasswordByUnixID(UnixID string, input UpdatePasswordInput) (User, error) {
+	user, err := s.repository.FindByUnixID(UnixID)
+	if err != nil {
+		return user, err
+	}
+
+	if user.UnixID == "" {
+		return user, errors.New("No user found on with that ID")
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(input.OldPassword))
+
+	if err != nil {
+		return user, err
+	}
+
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)
+
+	if err != nil {
+		return user, err
+	}
+
+	user.PasswordHash = string(passwordHash)
+
+	updatedUser, err := s.repository.UpdatePassword(user)
+	if err != nil {
+		return updatedUser, err
+	}
+
+	return updatedUser, nil
+}
+
+func (s *service) UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdminInput) (User, error) {
+	user, err := s.repository.FindByUnixID(UnixID)
+	if err != nil {
+		return user, err
+	}
+
+	if user.UnixID == "" {
+		return user, errors.New("No user found on with that ID")
+	}
+
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)
+
+	if err != nil {
+		return user, err
+	}
+
+	user.PasswordHash = string(passwordHash)
+
+	updatedUser, err := s.repository.UpdatePassword(user)
+	if err != nil {
+		return updatedUser, err
+	}
+
+	return updatedUser, nil
+}
+
 func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 	user := User{}
 	user.UnixID = uuid.New().String()[:12]
@@ -223,79 +281,6 @@ func (s *service) DeleteToken(UnixID string) (User, error) {
 	user.Token = ""
 
 	updatedUser, err := s.repository.UpdateToken(user)
-	if err != nil {
-		return updatedUser, err
-	}
-
-	return updatedUser, nil
-}
-
-// give info id user admin
-// func (s *service) GetInfoAdmin(UnixID string) (User, error) {
-// 	user, err := s.repository.FindByUnixID(UnixID)
-// 	if err != nil {
-// 		return user, err
-// 	}
-
-// 	if user.UnixID == "" {
-// 		return user, errors.New("No user found on with that ID")
-// 	}
-
-// 	return user, nil
-// }
-// UpdatePasswordByUnixID(UnixID string, input UpdatePasswordInput) (User, error)
-
-func (s *service) UpdatePasswordByUnixID(UnixID string, input UpdatePasswordInput) (User, error) {
-	user, err := s.repository.FindByUnixID(UnixID)
-	if err != nil {
-		return user, err
-	}
-
-	if user.UnixID == "" {
-		return user, errors.New("No user found on with that ID")
-	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(input.OldPassword))
-
-	if err != nil {
-		return user, err
-	}
-
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)
-
-	if err != nil {
-		return user, err
-	}
-
-	user.PasswordHash = string(passwordHash)
-
-	updatedUser, err := s.repository.UpdatePassword(user)
-	if err != nil {
-		return updatedUser, err
-	}
-
-	return updatedUser, nil
-}
-
-func (s *service) UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdminInput) (User, error) {
-	user, err := s.repository.FindByUnixID(UnixID)
-	if err != nil {
-		return user, err
-	}
-
-	if user.UnixID == "" {
-		return user, errors.New("No user found on with that ID")
-	}
-
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)
-
-	if err != nil {
-		return user, err
-	}
-
-	user.PasswordHash = string(passwordHash)
-
-	updatedUser, err := s.repository.UpdatePassword(user)
 	if err != nil {
 		return updatedUser, err
 	}
