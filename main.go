@@ -63,6 +63,10 @@ func main() {
 	api.POST("/register_admin", userHandler.RegisterUser)
 	api.POST("/login_admin", userHandler.Login)
 
+	//make service health for investor
+	api.GET("/service_start", userHandler.ServiceStart)
+	api.GET("/service_check", middleware.AuthMiddleware(authService, userAdminService), userHandler.ServiceCheckDB)
+
 	// route give information to user about admin
 	api.GET("/admin/getAdminID/:unix_id", userHandler.GetInfoAdminID)
 
