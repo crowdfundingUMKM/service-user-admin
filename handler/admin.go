@@ -128,7 +128,7 @@ func (h *userAdminHandler) DeactiveUser(c *gin.Context) {
 		// get id user
 
 		// deactive user
-		deactive, err := h.userService.DeactivateAccountUser(input)
+		deactive, err := h.userService.DeactivateAccountUser(input, id)
 
 		data := gin.H{
 			"success_deactive": deactive,
@@ -167,7 +167,7 @@ func (h *userAdminHandler) ActiveUser(c *gin.Context) {
 		// get id user
 
 		// deactive user
-		active, err := h.userService.ActivateAccountUser(input)
+		active, err := h.userService.ActivateAccountUser(input, id)
 
 		data := gin.H{
 			"success_deactive": active,

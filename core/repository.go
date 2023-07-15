@@ -90,13 +90,15 @@ func (r *repository) Update(user User) (User, error) {
 }
 
 func (r *repository) UpdateStatusAccount(user User) (User, error) {
-	err := r.db.Model(&user).Update("status_account", user.StatusAccount).Error
+	// update status account and ref admin
+	err := r.db.Model(&user).Updates(User{StatusAccount: user.StatusAccount, RefAdmin: user.RefAdmin}).Error
 
 	if err != nil {
 		return user, err
 	}
 
 	return user, nil
+
 }
 
 // delete user

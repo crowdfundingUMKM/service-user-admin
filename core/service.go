@@ -9,8 +9,8 @@ import (
 )
 
 type Service interface {
-	DeactivateAccountUser(input DeactiveUserInput) (bool, error)
-	ActivateAccountUser(input DeactiveUserInput) (bool, error)
+	DeactivateAccountUser(input DeactiveUserInput, adminId string) (bool, error)
+	ActivateAccountUser(input DeactiveUserInput, adminId string) (bool, error)
 	RegisterUser(input RegisterUserInput) (User, error)
 	Login(input LoginInput) (User, error)
 	SaveToken(UnixID string, Token string) (User, error)
@@ -33,9 +33,10 @@ func NewService(repository Repository) *service {
 	return &service{repository}
 }
 
-func (s *service) DeactivateAccountUser(input DeactiveUserInput) (bool, error) {
+func (s *service) DeactivateAccountUser(input DeactiveUserInput, adminId string) (bool, error) {
 	user, err := s.repository.FindByUnixID(input.UnixID)
 	user.StatusAccount = "deactive"
+	user.RefAdmin = adminId
 	_, err = s.repository.UpdateStatusAccount(user)
 
 	if err != nil {
@@ -48,9 +49,10 @@ func (s *service) DeactivateAccountUser(input DeactiveUserInput) (bool, error) {
 	return true, nil
 }
 
-func (s *service) ActivateAccountUser(input DeactiveUserInput) (bool, error) {
+func (s *service) ActivateAccountUser(input DeactiveUserInput, adminId string) (bool, error) {
 	user, err := s.repository.FindByUnixID(input.UnixID)
 	user.StatusAccount = "active"
+	user.RefAdmin = adminId
 	_, err = s.repository.UpdateStatusAccount(user)
 
 	if err != nil {

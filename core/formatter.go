@@ -8,6 +8,7 @@ type UserAdminFormatter struct {
 	Email         string `json:"email"`
 	Token         string `json:"token"`
 	StatusAccount string `json:"status_account"`
+	RefAdmin      string `json:"ref_admin"`
 }
 
 func FormatterUser(user User, token string) UserAdminFormatter {
@@ -19,6 +20,7 @@ func FormatterUser(user User, token string) UserAdminFormatter {
 		Email:         user.Email,
 		Token:         token,
 		StatusAccount: user.StatusAccount,
+		RefAdmin:      user.RefAdmin,
 	}
 	return formatter
 }
@@ -57,6 +59,7 @@ func FormatterUserDetail(user User, updatedUser User) UserDetailFormatter {
 	return formatter
 }
 
+// for api to other service
 type UserAdmin struct {
 	UnixAdmin          string `json:"unix_admin"`
 	StatusAccountAdmin string `json:"status_account_admin"`
