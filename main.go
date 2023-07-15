@@ -73,6 +73,14 @@ func main() {
 
 	api.POST("/logout_admin", middleware.AuthMiddleware(authService, userAdminService), userHandler.Logout)
 
+	//make create image profile user by unix_id
+
+	//make update image profile user by unix_id
+
+	//make delete image profile user by unix_id
+
+	//make service health for investor
+
 	// end Rounting
 	url := fmt.Sprintf("%s:%s", os.Getenv("SERVICE_HOST"), os.Getenv("SERVICE_PORT"))
 	router.Run(url)
