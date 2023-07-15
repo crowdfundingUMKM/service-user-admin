@@ -88,16 +88,16 @@ func (s *service) DeleteUsers(UnixID string) (User, error) {
 
 func (s *service) UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdminInput, adminId string) (User, error) {
 	user, err := s.repository.FindByUnixID(UnixID)
-	user.RefAdmin = adminId
-	_, err = s.repository.UpdateStatusAccount(user)
-	if err != nil {
-		return user, err
-	}
 
 	if user.UnixID == "" {
 		return user, errors.New("No user found on with that ID")
 	}
-
+	// check if user is admin
+	user.RefAdmin = adminId
+	_, errId := s.repository.UpdateStatusAccount(user)
+	if errId != nil {
+		return user, err
+	}
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)
 
 	if err != nil {
