@@ -11,6 +11,9 @@ import (
 type Service interface {
 	DeactivateAccountUser(input DeactiveUserInput, adminId string) (bool, error)
 	ActivateAccountUser(input DeactiveUserInput, adminId string) (bool, error)
+	DeleteUsers(UnixID string) (User, error)
+	GetAllUsers() ([]User, error)
+	UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdminInput) (User, error)
 	RegisterUser(input RegisterUserInput) (User, error)
 	Login(input LoginInput) (User, error)
 	SaveToken(UnixID string, Token string) (User, error)
@@ -19,10 +22,7 @@ type Service interface {
 	GetUserByUnixID(UnixID string) (User, error)
 	UpdateUserByUnixID(UnixID string, input UpdateUserInput) (User, error)
 	UpdatePasswordByUnixID(UnixID string, input UpdatePasswordInput) (User, error)
-	UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdminInput) (User, error)
 	DeleteToken(UnixID string) (User, error)
-	DeleteUsers(UnixID string) (User, error)
-	GetAllUsers() ([]User, error)
 }
 
 type service struct {
