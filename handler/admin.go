@@ -76,28 +76,22 @@ func (h *userAdminHandler) ServiceHealth(c *gin.Context) {
 	}
 	// check env open or not
 	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
-		db_user := os.Getenv("DB_USER")
-		db_pass := os.Getenv("DB_PASS")
-		db_name := os.Getenv("DB_NAME")
-		db_port := os.Getenv("DB_PORT")
-		instance_host := os.Getenv("INSTANCE_HOST")
-		service_host := os.Getenv("SERVICE_HOST")
-		service_port := os.Getenv("SERVICE_PORT")
-		jwt_secret := os.Getenv("JWT_SECRET")
-		status_account := os.Getenv("STATUS_ACCOUNT")
-		admin_id := os.Getenv("ADMIN_ID")
+		envVars := []string{
+			"ADMIN_ID",
+			"DB_USER",
+			"DB_PASS",
+			"DB_NAME",
+			"DB_PORT",
+			"INSTANCE_HOST",
+			"SERVICE_HOST",
+			"SERVICE_PORT",
+			"JWT_SECRET",
+			"STATUS_ACCOUNT",
+		}
 
-		data := map[string]interface{}{
-			"db_user":          db_user,
-			"db_pass":          db_pass,
-			"db_name":          db_name,
-			"db_port":          db_port,
-			"db_instance_host": instance_host,
-			"service_host":     service_host,
-			"service_port":     service_port,
-			"jwt_secret":       jwt_secret,
-			"status_account":   status_account,
-			"admin_id":         admin_id,
+		data := make(map[string]interface{})
+		for _, key := range envVars {
+			data[key] = os.Getenv(key)
 		}
 		response := helper.APIResponse("Service Admin is running", http.StatusOK, "success", data)
 		c.JSON(http.StatusOK, response)
