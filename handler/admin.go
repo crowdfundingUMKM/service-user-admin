@@ -277,7 +277,7 @@ func (h *userAdminHandler) UpdatePasswordByAdmin(c *gin.Context) {
 
 	currentUser := c.MustGet("currentAdmin").(core.User)
 
-	updatedUser, err := h.userService.UpdatePasswordByAdmin(inputID.UnixID, inputData)
+	updatedUser, err := h.userService.UpdatePasswordByAdmin(inputID.UnixID, inputData, currentUser.UnixID)
 	if err != nil {
 		response := helper.APIResponse("Update password failed", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)

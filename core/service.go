@@ -13,7 +13,7 @@ type Service interface {
 	ActivateAccountUser(input DeactiveUserInput, adminId string) (bool, error)
 	DeleteUsers(UnixID string) (User, error)
 	GetAllUsers() ([]User, error)
-	UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdminInput) (User, error)
+	UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdminInput, adminId string) (User, error)
 	RegisterUser(input RegisterUserInput) (User, error)
 	Login(input LoginInput) (User, error)
 	SaveToken(UnixID string, Token string) (User, error)
@@ -86,8 +86,10 @@ func (s *service) DeleteUsers(UnixID string) (User, error) {
 	return user, nil
 }
 
-func (s *service) UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdminInput) (User, error) {
+func (s *service) UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdminInput, adminId string) (User, error) {
 	user, err := s.repository.FindByUnixID(UnixID)
+	user.RefAdmin = adminId
+	_, err = s.repository.UpdateStatusAccount(user)
 	if err != nil {
 		return user, err
 	}
