@@ -18,7 +18,7 @@ func AdminMiddleware(authService auth.Service, userService core.Service) gin.Han
 		authHeader := c.GetHeader("Authorization")
 
 		if !strings.Contains(authHeader, "Bearer") {
-			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
+			response := helper.APIResponse("Unauthorized MASTER", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
@@ -31,7 +31,7 @@ func AdminMiddleware(authService auth.Service, userService core.Service) gin.Han
 
 		token, err := authService.ValidateToken(tokenString)
 		if err != nil {
-			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
+			response := helper.APIResponse("Unauthorized MASTER", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
@@ -40,7 +40,7 @@ func AdminMiddleware(authService auth.Service, userService core.Service) gin.Han
 
 		// check if token is valid
 		if !ok || !token.Valid {
-			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
+			response := helper.APIResponse("Unauthorized ", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
@@ -49,14 +49,14 @@ func AdminMiddleware(authService auth.Service, userService core.Service) gin.Han
 
 		user, err := userService.GetUserByUnixID(userUnixID)
 		if err != nil {
-			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
+			response := helper.APIResponse("Unauthorized MASTER", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
 
 		// check if user is admin
 		if userUnixID != os.Getenv("ADMIN_ID") {
-			data := gin.H{"status": "you are not ROOT admin"}
+			data := gin.H{"status": "you are not MASTER admin"}
 			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", data)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
