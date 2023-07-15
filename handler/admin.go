@@ -528,6 +528,13 @@ func (h *userAdminHandler) GetUser(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
+	// if you logout you can't get user
+	if currentUser.Token == "" {
+		errorMessage := gin.H{"errors": "Your account is logout"}
+		response := helper.APIResponse("Get user failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
 
 	formatter := core.FormatterUser(currentUser, "")
 
@@ -564,6 +571,14 @@ func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 	if currentUser.UnixID != inputID.UnixID {
 		response := helper.APIResponse("Update user failed, because you are not auth", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	// if you logout you can't get user
+	if currentUser.Token == "" {
+		errorMessage := gin.H{"errors": "Your account is logout"}
+		response := helper.APIResponse("Get user failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
 
@@ -610,6 +625,13 @@ func (h *userAdminHandler) UpdatePassword(c *gin.Context) {
 	if currentUser.UnixID != inputID.UnixID {
 		response := helper.APIResponse("Update password failed, because you are not auth", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	// if you logout you can't get user
+	if currentUser.Token == "" {
+		errorMessage := gin.H{"errors": "Your account is logout"}
+		response := helper.APIResponse("Get user failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
 
