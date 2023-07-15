@@ -71,7 +71,7 @@ func main() {
 	api.PUT("/update_profile/:unix_id", middleware.AuthMiddleware(authService, userAdminService), userHandler.UpdateUser)
 	api.PUT("/update_password/:unix_id", middleware.AuthMiddleware(authService, userAdminService), userHandler.UpdatePassword)
 
-	api.POST("/logout_admin", middleware.AuthMiddleware(authService, userAdminService), userHandler.Logout)
+	api.POST("/logout_admin", middleware.AuthMiddleware(authService, userAdminService), userHandler.LogoutUser)
 
 	//make create image profile user by unix_id
 

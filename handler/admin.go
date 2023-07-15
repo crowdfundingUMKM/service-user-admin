@@ -654,7 +654,7 @@ func (h *userAdminHandler) GetInfoAdminID(c *gin.Context) {
 }
 
 // Logout user
-func (h *userAdminHandler) Logout(c *gin.Context) {
+func (h *userAdminHandler) LogoutUser(c *gin.Context) {
 	// get data from middleware
 	currentUser := c.MustGet("currentUser").(core.User)
 
