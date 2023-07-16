@@ -57,6 +57,11 @@ func main() {
 	api.PUT("/update_password_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdatePasswordByAdmin)
 
 	api.GET("/get_all_user_by_admin/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.GetAllUserData)
+
+	// can access to get prove token
+	// verify token
+	api.GET("/verify_token", middleware.AuthMiddleware(authService, userAdminService), userHandler.VerifyToken)
+
 	// Rounting admin
 	api.POST("/email_check", userHandler.CheckEmailAvailability)
 	api.POST("/phone_check", userHandler.CheckPhoneAvailability)

@@ -329,6 +329,34 @@ func (h *userAdminHandler) DeleteUser(c *gin.Context) {
 	}
 }
 
+// cen acces to veriefy token VerifyToken
+func (h *userAdminHandler) VerifyToken(c *gin.Context) {
+	currentUser := c.MustGet("currentUser").(core.User)
+
+	// check f account deactive
+	if currentUser.StatusAccount == "deactive" {
+		errorMessage := gin.H{"errors": "Your account is deactive by admin"}
+		response := helper.APIResponse("Your token failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	// if you logout you can't get user
+	if currentUser.Token == "" {
+		errorMessage := gin.H{"errors": "Your account is logout"}
+		response := helper.APIResponse("Your token failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	data := gin.H{
+		"success":  "Your token is valid",
+		"admin_id": currentUser.UnixID,
+	}
+
+	response := helper.APIResponse("Successfuly get user by middleware", http.StatusOK, "success", data)
+	c.JSON(http.StatusOK, response)
+}
+
 // User Admin
 // Register User Admin
 func (h *userAdminHandler) RegisterUser(c *gin.Context) {
