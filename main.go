@@ -58,6 +58,12 @@ func main() {
 
 	api.GET("/get_all_user_by_admin/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.GetAllUserData)
 
+	// make endoint to change statusbyadmin MASTER
+
+	// make endpoint SoftDeletebyadmin MASTER
+
+	// update sql if admin master change must add time update
+
 	// can access to get prove token
 	// verify token
 	api.GET("/verifyToken", middleware.AuthMiddleware(authService, userAdminService), userHandler.VerifyToken)
