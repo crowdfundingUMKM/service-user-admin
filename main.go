@@ -96,6 +96,16 @@ func main() {
 
 	//make service health for investor
 
+	// Notifikasi user admin
+
+	// Create notifikasi user admin with auth
+
+	// Update notifikasi user admin with auth
+
+	// Delete notifikasi user admin with auth
+
+	// Update Status notifikasi user admin with auth
+
 	// end Rounting
 	url := fmt.Sprintf("%s:%s", os.Getenv("SERVICE_HOST"), os.Getenv("SERVICE_PORT"))
 	router.Run(url)
