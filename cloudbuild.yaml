@@ -1,8 +1,4 @@
 steps:
-# Step 1: Checkout kode dari repositori (main branch)
-- name: 'gcr.io/cloud-builders/git'
-  args: ['clone', '-b', 'main', '.']
-
 # Step 3: Build Docker image
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/crowdfunding/service-user-admin', '.']
