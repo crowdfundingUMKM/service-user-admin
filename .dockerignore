@@ -2,4 +2,6 @@ Dockerfile
 .dockerignore
 README.md
 .git
-./log/gin.log
+./tmp/gin.log
+.env.example
+.env.prod
