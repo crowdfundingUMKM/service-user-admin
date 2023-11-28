@@ -8,4 +8,4 @@ steps:
   args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/crowdfunding/service-user-admin']
 
 images:
-- 'gcr.io/$PROJECT_ID/crowdfunding/service-user-admin'
+- 'us-central1-docker.pkg.dev/$PROJECT_ID/crowdfunding/service-user-admin'
