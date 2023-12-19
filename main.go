@@ -66,7 +66,7 @@ func main() {
 
 	// can access to get prove token
 	// verify token
-	api.GET("/verifyToken", middleware.AuthMiddleware(authService, userAdminService), userHandler.VerifyToken)
+	api.GET("/verifyTokenAdmin", middleware.AuthMiddleware(authService, userAdminService), userHandler.VerifyToken)
 
 	// Rounting admin
 	api.POST("/email_check", userHandler.CheckEmailAvailability)
