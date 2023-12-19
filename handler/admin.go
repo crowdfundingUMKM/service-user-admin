@@ -28,8 +28,8 @@ func (h *userAdminHandler) GetLogtoAdmin(c *gin.Context) {
 	// get data from middleware
 	currentAdmin := c.MustGet("currentAdmin").(core.User)
 
-	id := os.Getenv("ADMIN_ID")
-	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
+	// id := os.Getenv("ADMIN_ID")
+	if currentAdmin.RefAdmin == "MASTER" {
 		content, err := ioutil.ReadFile("./tmp/gin.log")
 		if err != nil {
 			response := helper.APIResponse("Failed to get log", http.StatusBadRequest, "error", nil)
@@ -64,8 +64,8 @@ func (h *userAdminHandler) ServiceHealth(c *gin.Context) {
 		return
 	}
 
-	id := os.Getenv("ADMIN_ID")
-	if c.Param("admin_id") != id {
+	// id := os.Getenv("ADMIN_ID")
+	if currentAdmin.RefAdmin == "MASTER" {
 		response := helper.APIResponse("Your not Admin, cannot Access", http.StatusUnprocessableEntity, "error", nil)
 		c.JSON(http.StatusNotFound, response)
 		return
@@ -77,7 +77,7 @@ func (h *userAdminHandler) ServiceHealth(c *gin.Context) {
 		return
 	}
 	// check env open or not
-	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
+	if currentAdmin.RefAdmin == "MASTER" {
 		envVars := []string{
 			"ADMIN_ID",
 			"DB_USER",
@@ -119,12 +119,12 @@ func (h *userAdminHandler) DeactiveUser(c *gin.Context) {
 		return
 	}
 	// check id admin
-	id := os.Getenv("ADMIN_ID")
-	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
+	// id := os.Getenv("ADMIN_ID")
+	if currentAdmin.RefAdmin == "MASTER" {
 		// get id user
 
 		// deactive user
-		deactive, err := h.userService.DeactivateAccountUser(input, id)
+		deactive, err := h.userService.DeactivateAccountUser(input, currentAdmin.UnixID)
 
 		data := gin.H{
 			"success_deactive": deactive,
@@ -158,12 +158,12 @@ func (h *userAdminHandler) ActiveUser(c *gin.Context) {
 		return
 	}
 	// check id admin
-	id := os.Getenv("ADMIN_ID")
-	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
+	// id := os.Getenv("ADMIN_ID")
+	if currentAdmin.RefAdmin == "MASTER" {
 		// get id user
 
 		// deactive user
-		active, err := h.userService.ActivateAccountUser(input, id)
+		active, err := h.userService.ActivateAccountUser(input, currentAdmin.UnixID)
 
 		data := gin.H{
 			"success_deactive": active,
@@ -186,18 +186,18 @@ func (h *userAdminHandler) ActiveUser(c *gin.Context) {
 // get all user by admin
 func (h *userAdminHandler) GetAllUserData(c *gin.Context) {
 	currentAdmin := c.MustGet("currentAdmin").(core.User)
-	id := os.Getenv("ADMIN_ID")
-	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
+	// id := os.Getenv("ADMIN_ID")
+	if currentAdmin.RefAdmin == "MASTER" {
 		users, err := h.userService.GetAllUsers()
 		if err != nil {
-			response := helper.APIResponse("Failed to get user", http.StatusBadRequest, "error", nil)
+			response := helper.APIResponse("Failed to get admin", http.StatusBadRequest, "error", nil)
 			c.JSON(http.StatusBadRequest, response)
 			return
 		}
-		response := helper.APIResponse("List of user", http.StatusOK, "success", users)
+		response := helper.APIResponse("List of user admin", http.StatusOK, "success", users)
 		c.JSON(http.StatusOK, response)
 	} else {
-		response := helper.APIResponse("Your not Admin, cannot Access", http.StatusUnprocessableEntity, "error", nil)
+		response := helper.APIResponse("Your not Admin MASTER, cannot Access", http.StatusUnprocessableEntity, "error", nil)
 		c.JSON(http.StatusNotFound, response)
 		return
 	}
@@ -218,8 +218,8 @@ func (h *userAdminHandler) UpdateUserByAdmin(c *gin.Context) {
 		return
 	}
 	// check id admin
-	id := os.Getenv("ADMIN_ID")
-	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
+	// id := os.Getenv("ADMIN_ID")
+	if currentAdmin.RefAdmin == "MASTER" {
 		// get id user by body unix_id target
 		unixId := c.Param("unix_id")
 
@@ -301,15 +301,15 @@ func (h *userAdminHandler) DeleteUser(c *gin.Context) {
 		return
 	}
 	// check id admin
-	id := os.Getenv("ADMIN_ID")
-	if c.Param("admin_id") == currentAdmin.UnixID && c.Param("admin_id") == id {
+	// id := os.Getenv("ADMIN_ID")
+	if currentAdmin.RefAdmin == "MASTER" {
 		// get id user
 
 		// deactive user
-		delete, err := h.userService.DeleteUsers(input.UnixID)
+		_, err := h.userService.DeleteUsers(input.UnixID)
 
 		data := gin.H{
-			"success_delete": delete,
+			"success_delete": true,
 		}
 
 		if err != nil {

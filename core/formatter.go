@@ -73,3 +73,41 @@ func FormatterUserAdminID(user User) UserAdmin {
 	}
 	return formatter
 }
+
+// formater all user
+// type AllUserFormatter struct {
+// 	ID            int    `json:"id"`
+// 	UnixID        string `json:"unix_id"`
+// 	Name          string `json:"name"`
+// 	Phone         string `json:"phone"`
+// 	Email         string `json:"email"`
+// 	StatusAccount string `json:"status_account"`
+// 	RefAdmin      string `json:"ref_admin"`
+// 	UpdateIdAdmin string `json:"update_id_admin"`
+// 	UpdateAtAdmin string `json:"update_at_admin"`
+// 	CreatedAt     string `json:"created_at"`
+// 	UpdatedAt     string `json:"updated_at"`
+// }
+
+// func FormatterAllUsers(users []User) []AllUserFormatter {
+// 	var formatters []AllUserFormatter
+
+// 	for _, user := range users {
+// 		formatter := AllUserFormatter{
+// 			ID:            user.ID,
+// 			UnixID:        user.UnixID,
+// 			Name:          user.Name,
+// 			Phone:         user.Phone,
+// 			Email:         user.Email,
+// 			StatusAccount: user.StatusAccount,
+// 			RefAdmin:      user.RefAdmin,
+// 			UpdateIdAdmin: user.UpdateIdAdmin,
+// 			UpdateAtAdmin: user.UpdateAtAdmin.String(),
+// 			CreatedAt:     user.CreatedAt.String(),
+// 			UpdatedAt:     user.UpdatedAt.String(),
+// 		}
+// 		formatters = append(formatters, formatter)
+// 	}
+
+// 	return formatters
+// }

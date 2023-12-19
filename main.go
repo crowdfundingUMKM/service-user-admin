@@ -52,11 +52,11 @@ func main() {
 	api.GET("/service_status/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.ServiceHealth)
 	api.POST("/deactive_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeactiveUser)
 	api.POST("/active_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.ActiveUser)
-	api.POST("/delete_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeleteUser)
+	api.DELETE("/delete_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeleteUser)
 	api.PUT("/update_user_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdateUserByAdmin)
 	api.PUT("/update_password_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdatePasswordByAdmin)
 
-	api.GET("/get_all_user_by_admin/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.GetAllUserData)
+	api.GET("/get_all_user_by_admin", middleware.AdminMiddleware(authService, userAdminService), userHandler.GetAllUserData)
 
 	// make endoint to change statusbyadmin MASTER
 

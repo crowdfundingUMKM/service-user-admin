@@ -1,6 +1,8 @@
 package core
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
 	ID             int
@@ -13,6 +15,20 @@ type User struct {
 	StatusAccount  string
 	Token          string
 	RefAdmin       string
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
+	UpdateidAdmin  string
+	UpdateatAdmin  time.Time
+	Createdat      time.Time
+	Updatedat      time.Time
+}
+
+type NotifAdmin struct {
+	ID          int
+	UserAdminId string
+	Title       string
+	Description string
+	ToUser      string
+	Document    string
+	StatusNotif int
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }

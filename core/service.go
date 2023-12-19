@@ -3,6 +3,7 @@ package core
 import (
 	"errors"
 	"os"
+	"time"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -77,6 +78,7 @@ func (s *service) GetAllUsers() ([]User, error) {
 // delete user
 func (s *service) DeleteUsers(UnixID string) (User, error) {
 	user, err := s.repository.FindByUnixID(UnixID)
+	user.UpdateatAdmin = time.Now()
 	_, err = s.repository.DeleteUser(user)
 
 	if err != nil {
