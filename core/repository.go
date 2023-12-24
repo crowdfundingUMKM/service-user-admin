@@ -93,7 +93,7 @@ func (r *repository) Update(user User) (User, error) {
 
 func (r *repository) UpdateStatusAccount(user User) (User, error) {
 	// update status account and ref admin
-	err := r.db.Model(&user).Updates(User{StatusAccount: user.StatusAccount, RefAdmin: user.RefAdmin}).Error
+	err := r.db.Model(&user).Updates(User{StatusAccount: user.StatusAccount, UpdateIdAdmin: user.UpdateIdAdmin, UpdateAtAdmin: user.UpdateAtAdmin}).Error
 
 	if err != nil {
 		return user, err

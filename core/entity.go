@@ -15,7 +15,7 @@ type User struct {
 	StatusAccount  string
 	Token          string
 	RefAdmin       string
-	UpdateIdAdmin  string
+	UpdateIdAdmin  string `column:"update_id_admin"`
 	UpdateAtAdmin  time.Time
 	CreatedAt      time.Time
 	UpdatedAt      time.Time

@@ -50,8 +50,8 @@ func main() {
 	// Rounting admin-health Root Admin
 	api.GET("/log_service_admin/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.GetLogtoAdmin)
 	api.GET("/service_status", middleware.AdminMiddleware(authService, userAdminService), userHandler.ServiceHealth)
-	api.POST("/deactive_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeactiveUser)
-	api.POST("/active_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.ActiveUser)
+	api.POST("/deactive_user", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeactiveUser)
+	api.POST("/active_user", middleware.AdminMiddleware(authService, userAdminService), userHandler.ActiveUser)
 	api.DELETE("/delete_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeleteUser)
 	api.PUT("/update_user_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdateUserByAdmin)
 	api.PUT("/update_password_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdatePasswordByAdmin)

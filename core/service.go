@@ -3,6 +3,7 @@ package core
 import (
 	"errors"
 	"os"
+	"time"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -38,7 +39,8 @@ func NewService(repository Repository) *service {
 func (s *service) DeactivateAccountUser(input DeactiveUserInput, adminId string) (bool, error) {
 	user, err := s.repository.FindByUnixID(input.UnixID)
 	user.StatusAccount = "deactive"
-	user.RefAdmin = adminId
+	user.UpdateIdAdmin = adminId
+	user.UpdateAtAdmin = time.Now()
 	_, err = s.repository.UpdateStatusAccount(user)
 
 	if err != nil {
@@ -54,7 +56,8 @@ func (s *service) DeactivateAccountUser(input DeactiveUserInput, adminId string)
 func (s *service) ActivateAccountUser(input DeactiveUserInput, adminId string) (bool, error) {
 	user, err := s.repository.FindByUnixID(input.UnixID)
 	user.StatusAccount = "active"
-	user.RefAdmin = adminId
+	user.UpdateIdAdmin = adminId
+	user.UpdateAtAdmin = time.Now()
 	_, err = s.repository.UpdateStatusAccount(user)
 
 	if err != nil {
