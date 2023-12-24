@@ -26,3 +26,5 @@ go.work
 
 # log
 /log/gin.log
+
+secret-keys.json

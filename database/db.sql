@@ -9,11 +9,11 @@ CREATE TABLE `users`
     `avatar_file_name` VARCHAR(255),
     `status_account` VARCHAR(255),
     `token` VARCHAR(255),
-    `ref_admin` VARCHAR(12),
-    `update_id_admin` CHAR(12),
-    `update_at_admin` DATETIME,
-    `created_at` DATETIME,
-    `updated_at` DATETIME,
+    `ref_admin` VARCHAR(12) DEFAULT NULL,
+    `update_id_admin` CHAR(12) DEFAULT NULL,
+    `update_at_admin` DATETIME, DEFAULT NULL,
+    `created_at` DATETIME DEFAULT NULL,
+    `updated_at` DATETIME DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -27,8 +27,8 @@ CREATE TABLE `notif_admins`
     `to_user` VARCHAR(11),
     `document` VARCHAR(255),
     `status_notif` TINYINT(1),
-    `created_at` DATETIME,
-    `updated_at` DATETIME,
+    `created_at` DATETIME DEFAULT NULL,
+    `updated_at` DATETIME DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -14,6 +14,8 @@ type Repository interface {
 	DeleteUser(user User) (User, error)
 	GetAllUser() ([]User, error)
 	UpdatePassword(user User) (User, error)
+
+	UploadAvatarImage(user User) (User, error)
 }
 
 type repository struct {
@@ -128,6 +130,16 @@ func (r *repository) GetAllUser() ([]User, error) {
 // update password
 func (r *repository) UpdatePassword(user User) (User, error) {
 	err := r.db.Model(&user).Update("password_hash", user.PasswordHash).Error
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (r *repository) UploadAvatarImage(user User) (User, error) {
+	err := r.db.Model(&user).Updates(User{AvatarFileName: user.AvatarFileName}).Error
 
 	if err != nil {
 		return user, err

@@ -1,23 +1,33 @@
 package handler
 
 import (
+	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"service-user-admin/auth"
 	"service-user-admin/core"
 	"service-user-admin/database"
 	"service-user-admin/helper"
 
+	"cloud.google.com/go/storage"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"google.golang.org/api/option"
+	"google.golang.org/appengine"
 )
 
 type userAdminHandler struct {
 	userService core.Service
 	authService auth.Service
 }
+
+var (
+	storageClient *storage.Client
+)
 
 func NewUserHandler(userService core.Service, authService auth.Service) *userAdminHandler {
 	return &userAdminHandler{userService, authService}
@@ -614,19 +624,10 @@ func (h *userAdminHandler) GetUser(c *gin.Context) {
 
 // update user by unix id
 func (h *userAdminHandler) UpdateUser(c *gin.Context) {
-	var inputID core.GetUserIdInput
-
-	// check id is valid or not
-	err := c.ShouldBindUri(&inputID)
-	if err != nil {
-		response := helper.APIResponse("Update user failed", http.StatusBadRequest, "error", nil)
-		c.JSON(http.StatusBadRequest, response)
-		return
-	}
 
 	var inputData core.UpdateUserInput
 
-	err = c.ShouldBindJSON(&inputData)
+	err := c.ShouldBindJSON(&inputData)
 	if err != nil {
 		errors := helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors": errors}
@@ -637,12 +638,6 @@ func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 	}
 
 	currentUser := c.MustGet("currentUser").(core.User)
-
-	if currentUser.UnixID != inputID.UnixID {
-		response := helper.APIResponse("Update user failed, because you are not auth", http.StatusBadRequest, "error", nil)
-		c.JSON(http.StatusBadRequest, response)
-		return
-	}
 
 	// if you logout you can't get user
 	if currentUser.Token == "" {
@@ -668,19 +663,10 @@ func (h *userAdminHandler) UpdateUser(c *gin.Context) {
 
 // update password by unix id
 func (h *userAdminHandler) UpdatePassword(c *gin.Context) {
-	var inputID core.GetUserIdInput
-
-	// check id is valid or not
-	err := c.ShouldBindUri(&inputID)
-	if err != nil {
-		response := helper.APIResponse("Update password failed", http.StatusBadRequest, "error", nil)
-		c.JSON(http.StatusBadRequest, response)
-		return
-	}
 
 	var inputData core.UpdatePasswordInput
 
-	err = c.ShouldBindJSON(&inputData)
+	err := c.ShouldBindJSON(&inputData)
 	if err != nil {
 		errors := helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors": errors}
@@ -692,11 +678,6 @@ func (h *userAdminHandler) UpdatePassword(c *gin.Context) {
 
 	currentUser := c.MustGet("currentUser").(core.User)
 
-	if currentUser.UnixID != inputID.UnixID {
-		response := helper.APIResponse("Update password failed, because you are not auth", http.StatusBadRequest, "error", nil)
-		c.JSON(http.StatusBadRequest, response)
-		return
-	}
 	// if you logout you can't get user
 	if currentUser.Token == "" {
 		errorMessage := gin.H{"errors": "Your account is logout"}
@@ -743,6 +724,91 @@ func (h *userAdminHandler) GetInfoAdminID(c *gin.Context) {
 	response := helper.APIResponse("Successfuly get user id and status", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 
+}
+
+// Upload image
+func (h *userAdminHandler) UploadAvatar(c *gin.Context) {
+	f, _, err := c.Request.FormFile("avatar")
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(core.User)
+	userID := currentUser.UnixID
+	userName := currentUser.Name
+
+	// if you logout you can't get user
+	if currentUser.Token == "" {
+		errorMessage := gin.H{"errors": "Your account is logout"}
+		response := helper.APIResponse("Get user failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	// initiate cloud storage os.Getenv("GCS_BUCKET")
+	bucket := fmt.Sprintf("%s", os.Getenv("GCS_BUCKET"))
+	subfolder := fmt.Sprintf("%s", os.Getenv("GCS_SUBFOLDER"))
+	// var err error
+	ctx := appengine.NewContext(c.Request)
+
+	storageClient, err = storage.NewClient(ctx, option.WithCredentialsFile("secret-keys.json"))
+
+	if err != nil {
+		// data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image to GCP", http.StatusBadRequest, "error", err)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	defer f.Close()
+
+	objectName := fmt.Sprintf("%s/avatar-%s-%s", subfolder, userID, userName)
+	sw := storageClient.Bucket(bucket).Object(objectName).NewWriter(ctx)
+
+	if _, err := io.Copy(sw, f); err != nil {
+		// data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image to GCP", http.StatusBadRequest, "error", err)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	if err := sw.Close(); err != nil {
+		// data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image to GCP", http.StatusBadRequest, "error", err)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	u, err := url.Parse("/" + bucket + "/" + sw.Attrs().Name)
+	if err != nil {
+		// data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image to GCP", http.StatusBadRequest, "error", err)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	path := u.String()
+
+	// save avatar to database
+	_, err = h.userService.SaveAvatar(userID, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	data := gin.H{"is_uploaded": true}
+	response := helper.APIResponse("Avatar successfuly uploaded", http.StatusOK, "success", data)
+
+	c.JSON(http.StatusOK, response)
 }
 
 // Logout user

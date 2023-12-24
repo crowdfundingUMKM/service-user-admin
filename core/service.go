@@ -3,7 +3,6 @@ package core
 import (
 	"errors"
 	"os"
-	"time"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -24,6 +23,8 @@ type Service interface {
 	UpdateUserByUnixID(UnixID string, input UpdateUserInput) (User, error)
 	UpdatePasswordByUnixID(UnixID string, input UpdatePasswordInput) (User, error)
 	DeleteToken(UnixID string) (User, error)
+
+	SaveAvatar(UnixID string, fileLocation string) (User, error)
 }
 
 type service struct {
@@ -78,7 +79,6 @@ func (s *service) GetAllUsers() ([]User, error) {
 // delete user
 func (s *service) DeleteUsers(UnixID string) (User, error) {
 	user, err := s.repository.FindByUnixID(UnixID)
-	user.UpdateatAdmin = time.Now()
 	_, err = s.repository.DeleteUser(user)
 
 	if err != nil {
@@ -122,6 +122,7 @@ func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 	user.Name = input.Name
 	user.Email = input.Email
 	user.Phone = input.Phone
+	user.AvatarFileName = "/crwdstorage/dafault-avatar.png"
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 
@@ -285,6 +286,22 @@ func (s *service) DeleteToken(UnixID string) (User, error) {
 	user.Token = ""
 
 	updatedUser, err := s.repository.UpdateToken(user)
+	if err != nil {
+		return updatedUser, err
+	}
+
+	return updatedUser, nil
+}
+
+func (s *service) SaveAvatar(UnixID string, fileLocation string) (User, error) {
+	user, err := s.repository.FindByUnixID(UnixID)
+	if err != nil {
+		return user, err
+	}
+
+	user.AvatarFileName = fileLocation
+
+	updatedUser, err := s.repository.UploadAvatarImage(user)
 	if err != nil {
 		return updatedUser, err
 	}

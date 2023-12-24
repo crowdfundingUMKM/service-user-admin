@@ -15,10 +15,10 @@ type User struct {
 	StatusAccount  string
 	Token          string
 	RefAdmin       string
-	UpdateidAdmin  string
-	UpdateatAdmin  time.Time
-	Createdat      time.Time
-	Updatedat      time.Time
+	UpdateIdAdmin  string
+	UpdateAtAdmin  time.Time
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
 }
 
 type NotifAdmin struct {

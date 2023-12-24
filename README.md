@@ -75,3 +75,5 @@
 - Admin can get user profile
 - Remember to set env ADMIN_ID same with unix_id on user 
 
+- Need Secret form GCP for upload file
+
