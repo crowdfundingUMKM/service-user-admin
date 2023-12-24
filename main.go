@@ -53,8 +53,8 @@ func main() {
 	api.POST("/deactive_user", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeactiveUser)
 	api.POST("/active_user", middleware.AdminMiddleware(authService, userAdminService), userHandler.ActiveUser)
 	api.DELETE("/delete_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeleteUser)
-	api.PUT("/update_user_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdateUserByAdmin)
-	api.PUT("/update_password_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdatePasswordByAdmin)
+	// api.PUT("/update_user_by_admin/:admin_id/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdateUserByAdmin)
+	api.PUT("/update_password_by_admin/:unix_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.UpdatePasswordByAdmin)
 
 	api.GET("/get_all_user_by_admin", middleware.AdminMiddleware(authService, userAdminService), userHandler.GetAllUserData)
 

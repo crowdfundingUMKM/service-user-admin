@@ -98,7 +98,8 @@ func (s *service) UpdatePasswordByAdmin(UnixID string, input UpdatePasswordByAdm
 		return user, errors.New("No user found on with that ID")
 	}
 	// check if user is admin
-	user.RefAdmin = adminId
+	user.UpdateIdAdmin = adminId
+	user.UpdateAtAdmin = time.Now()
 	_, errId := s.repository.UpdateStatusAccount(user)
 	if errId != nil {
 		return user, err
