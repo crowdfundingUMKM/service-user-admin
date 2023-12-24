@@ -75,11 +75,11 @@ func (h *userAdminHandler) ServiceHealth(c *gin.Context) {
 	}
 
 	// id := os.Getenv("ADMIN_ID")
-	if currentAdmin.RefAdmin == "MASTER" {
-		response := helper.APIResponse("Your not Admin, cannot Access", http.StatusUnprocessableEntity, "error", nil)
-		c.JSON(http.StatusNotFound, response)
-		return
-	}
+	// if currentAdmin.RefAdmin == "MASTER" {
+	// 	response := helper.APIResponse("Your not Admin, cannot Access1", http.StatusUnprocessableEntity, "error", nil)
+	// 	c.JSON(http.StatusNotFound, response)
+	// 	return
+	// }
 	errService := c.Errors
 	if errService != nil {
 		response := helper.APIResponse("Service Admin is not running", http.StatusInternalServerError, "error", nil)
@@ -108,7 +108,7 @@ func (h *userAdminHandler) ServiceHealth(c *gin.Context) {
 		response := helper.APIResponse("Service Admin is running", http.StatusOK, "success", data)
 		c.JSON(http.StatusOK, response)
 	} else {
-		response := helper.APIResponse("Your not Admin, cannot Access", http.StatusUnprocessableEntity, "error", nil)
+		response := helper.APIResponse("Your not Admin MASTER, cannot Access", http.StatusUnprocessableEntity, "error", nil)
 		c.JSON(http.StatusNotFound, response)
 		return
 	}

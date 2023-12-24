@@ -49,7 +49,7 @@ func main() {
 
 	// Rounting admin-health Root Admin
 	api.GET("/log_service_admin/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.GetLogtoAdmin)
-	api.GET("/service_status/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.ServiceHealth)
+	api.GET("/service_status", middleware.AdminMiddleware(authService, userAdminService), userHandler.ServiceHealth)
 	api.POST("/deactive_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeactiveUser)
 	api.POST("/active_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.ActiveUser)
 	api.DELETE("/delete_user/:admin_id", middleware.AdminMiddleware(authService, userAdminService), userHandler.DeleteUser)
@@ -65,6 +65,9 @@ func main() {
 	// update sql if admin master change must add time update
 
 	// can access to get prove token
+	// route give information to user about admin
+	api.GET("/admin/getAdminID/:unix_id", userHandler.GetInfoAdminID)
+
 	// verify token
 	api.GET("/verifyTokenAdmin", middleware.AuthMiddleware(authService, userAdminService), userHandler.VerifyToken)
 
@@ -77,9 +80,6 @@ func main() {
 	//make service health for investor
 	api.GET("/service_start", userHandler.ServiceStart)
 	api.GET("/service_check", middleware.AuthMiddleware(authService, userAdminService), userHandler.ServiceCheckDB)
-
-	// route give information to user about admin
-	api.GET("/admin/getAdminID/:unix_id", userHandler.GetInfoAdminID)
 
 	// get user by unix_id
 	api.GET("/get_user", middleware.AuthMiddleware(authService, userAdminService), userHandler.GetUser)
