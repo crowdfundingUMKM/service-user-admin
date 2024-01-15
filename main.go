@@ -58,8 +58,6 @@ func main() {
 
 	api.GET("/get_all_user_by_admin", middleware.AdminMiddleware(authService, userAdminService), userHandler.GetAllUserData)
 
-	// make endoint to change statusbyadmin MASTER
-
 	// make endpoint SoftDeletebyadmin MASTER
 
 	// update sql if admin master change must add time update
@@ -90,8 +88,6 @@ func main() {
 
 	//make Upload image profile user token and Update image avatar
 	api.POST("/upload_avatar", middleware.AuthMiddleware(authService, userAdminService), userHandler.UploadAvatar)
-
-	//make update image profile user by unix_id
 
 	//make delete image profile user by unix_id
 
