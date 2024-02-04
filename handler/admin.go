@@ -693,8 +693,15 @@ func (h *userAdminHandler) UpdatePassword(c *gin.Context) {
 		return
 	}
 
-	formatter := core.FormatterUserDetail(currentUser, updatedUser)
+	// remove token in database
+	_, err = h.userService.DeleteToken(currentUser.UnixID)
+	if err != nil {
+		response := helper.APIResponse("Update password failed & failed remove tokens", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
 
+	formatter := core.FormatterUserDetail(currentUser, updatedUser)
 	response := helper.APIResponse("Password has been updated", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 	return
